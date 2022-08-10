@@ -21,12 +21,15 @@
   <div class="mt-4">
     <%= for post <- @posts do %>
         <div class="border-2 border-gray-200 rounded mb-2 p-2">
-          <h2 class="text-2xl"></h2>
-          <h2 class="text-2xl text-blue-400 hover:underline"><%= link post.title, to: Routes.post_path(@conn, :show, post) %></h2>
+          <h2 class="text-2xl text-blue-400 hover:underline"><%= link post.title, to: Routes.post_path(@conn, :show, post.slug) %></h2>
           <h2 class="text-xl">Author: Anonymous</h2>
           <h2 class="text-xl">32 commentaries</h2>
           <p><%= post.body %></p>
         </div>
+    <% end %>
+
+    <%= if length(@posts) == 0 do %>
+      <h2 class="text-2xl">There are no posts yet.</h2>
     <% end %>
   </div>
 </div>

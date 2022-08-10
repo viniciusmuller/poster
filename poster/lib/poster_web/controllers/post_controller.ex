@@ -19,15 +19,15 @@ defmodule PosterWeb.PostController do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post created successfully.")
-        |> redirect(to: Routes.post_path(conn, :show, post))
+        |> redirect(to: Routes.post_path(conn, :show, post.slug))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    post = Blog.get_post!(id)
+  def show(conn, %{"slug" => slug}) do
+    post = Blog.get_post_by_slug!(slug)
 
     {:ok, html_doc, []} = Earmark.as_html(post.body)
 
@@ -36,28 +36,28 @@ defmodule PosterWeb.PostController do
     |> render("show.html", post: post)
   end
 
-  def edit(conn, %{"id" => id}) do
-    post = Blog.get_post!(id)
+  def edit(conn, %{"slug" => slug}) do
+    post = Blog.get_post_by_slug!(slug)
     changeset = Blog.change_post(post)
     render(conn, "edit.html", post: post, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "post" => post_params}) do
-    post = Blog.get_post!(id)
+  def update(conn, %{"slug" => slug, "post" => post_params}) do
+    post = Blog.get_post_by_slug!(slug)
 
     case Blog.update_post(post, post_params) do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post updated successfully.")
-        |> redirect(to: Routes.post_path(conn, :show, post))
+        |> redirect(to: Routes.post_path(conn, :show, post.slug))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", post: post, changeset: changeset)
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    post = Blog.get_post!(id)
+  def delete(conn, %{"slug" => slug}) do
+    post = Blog.get_post_by_slug!(slug)
     {:ok, _post} = Blog.delete_post(post)
 
     conn

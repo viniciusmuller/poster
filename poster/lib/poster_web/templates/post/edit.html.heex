@@ -1,5 +1,5 @@
 <h1 class="text-3xl font-bold mb-1">Edit Post</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :update, @post)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :update, @post.slug)) %>
 
 <a class="p-1" href="javascript: history.go(-1)">Go Back</a>

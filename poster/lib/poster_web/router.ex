@@ -19,7 +19,7 @@ defmodule PosterWeb.Router do
 
     # get "/", PageController, :index
     # TODO: Will this be the main page?
-    resources "/", PostController
+    resources "/", PostController, param: "slug"
   end
 
   scope "/api", PosterWeb do

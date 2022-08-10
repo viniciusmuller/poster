@@ -20,11 +20,16 @@ defmodule Poster.BlogTest do
       assert Blog.get_post!(post.id) == post
     end
 
+    test "get_post_by_slug!/1 returns the post with given slug" do
+      post = post_fixture()
+      assert Blog.get_post_by_slug!(post.slug) == post
+    end
+
     test "create_post/1 with valid data creates a post" do
-      valid_attrs = %{body: "some body", title: "some title"}
+      valid_attrs = %{body: "some body once told me the world", title: "some title"}
 
       assert {:ok, %Post{} = post} = Blog.create_post(valid_attrs)
-      assert post.body == "some body"
+      assert post.body == "some body once told me the world"
       assert post.title == "some title"
     end
 

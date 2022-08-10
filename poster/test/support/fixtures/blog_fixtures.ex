@@ -11,7 +11,7 @@ defmodule Poster.BlogFixtures do
     {:ok, post} =
       attrs
       |> Enum.into(%{
-        body: "some body",
+        body: "some body once told me the world",
         title: "some title"
       })
       |> Poster.Blog.create_post()

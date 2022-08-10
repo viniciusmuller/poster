@@ -3,8 +3,8 @@ defmodule PosterWeb.PostControllerTest do
 
   import Poster.BlogFixtures
 
-  @create_attrs %{body: "some body", title: "some title"}
-  @update_attrs %{body: "some updated body", title: "some updated title"}
+  @create_attrs %{body: "some body some body some body ", title: "some title"}
+  @update_attrs %{body: "some updated body once told me the world", title: "some updated title"}
   @invalid_attrs %{body: nil, title: nil}
 
   describe "index" do
@@ -25,10 +25,10 @@ defmodule PosterWeb.PostControllerTest do
     test "redirects to show when data is valid", %{conn: conn} do
       conn = post(conn, Routes.post_path(conn, :create), post: @create_attrs)
 
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, id)
+      assert %{slug: slug} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.post_path(conn, :show, slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, id))
+      conn = get(conn, Routes.post_path(conn, :show, slug))
       assert html_response(conn, 200) =~ @create_attrs.title
     end
 
@@ -36,10 +36,10 @@ defmodule PosterWeb.PostControllerTest do
       malicious_payload = "<script>alert('danger')</script>"
       conn = post(conn, Routes.post_path(conn, :create), post: %{@create_attrs | body: malicious_payload})
 
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, id)
+      assert %{slug: slug} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.post_path(conn, :show, slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, id))
+      conn = get(conn, Routes.post_path(conn, :show, slug))
       refute html_response(conn, 200) =~ malicious_payload
     end
 
@@ -53,7 +53,7 @@ defmodule PosterWeb.PostControllerTest do
     setup [:create_post]
 
     test "renders form for editing chosen post", %{conn: conn, post: post} do
-      conn = get(conn, Routes.post_path(conn, :edit, post))
+      conn = get(conn, Routes.post_path(conn, :edit, post.slug))
       assert html_response(conn, 200) =~ "Edit Post"
     end
   end
@@ -62,15 +62,15 @@ defmodule PosterWeb.PostControllerTest do
     setup [:create_post]
 
     test "redirects when data is valid", %{conn: conn, post: post} do
-      conn = put(conn, Routes.post_path(conn, :update, post), post: @update_attrs)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, post)
+      conn = put(conn, Routes.post_path(conn, :update, post.slug), post: @update_attrs)
+      assert redirected_to(conn) == Routes.post_path(conn, :show, post.slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, post))
+      conn = get(conn, Routes.post_path(conn, :show, post.slug))
       assert html_response(conn, 200) =~ "some updated body"
     end
 
     test "renders errors when data is invalid", %{conn: conn, post: post} do
-      conn = put(conn, Routes.post_path(conn, :update, post), post: @invalid_attrs)
+      conn = put(conn, Routes.post_path(conn, :update, post.slug), post: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Post"
     end
   end
@@ -79,11 +79,11 @@ defmodule PosterWeb.PostControllerTest do
     setup [:create_post]
 
     test "deletes chosen post", %{conn: conn, post: post} do
-      conn = delete(conn, Routes.post_path(conn, :delete, post))
+      conn = delete(conn, Routes.post_path(conn, :delete, post.slug))
       assert redirected_to(conn) == Routes.post_path(conn, :index)
 
       assert_error_sent 404, fn ->
-        get(conn, Routes.post_path(conn, :show, post))
+        get(conn, Routes.post_path(conn, :show, post.slug))
       end
     end
   end

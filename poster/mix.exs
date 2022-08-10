@@ -52,7 +52,8 @@ defmodule Poster.MixProject do
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4"},
-      {:phoenix_html_sanitizer, "~> 1.1"}
+      {:phoenix_html_sanitizer, "~> 1.1"},
+      {:slugify, "~> 1.3"}
     ]
   end
 

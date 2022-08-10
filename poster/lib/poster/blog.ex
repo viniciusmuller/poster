@@ -38,6 +38,25 @@ defmodule Poster.Blog do
   def get_post!(id), do: Repo.get!(Post, id)
 
   @doc """
+  Gets a single post by its slug.
+
+  Raises `Ecto.NoResultsError` if the Post does not exist.
+
+  ## Examples
+
+      iex> get_post_by_slug!(123)
+      %Post{}
+
+      iex> get_post_slug!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_post_by_slug!(slug) do
+    query = from p in Post, where: p.slug == ^slug
+    Repo.one!(query)
+  end
+
+  @doc """
   Creates a post.
 
   ## Examples
@@ -69,7 +88,7 @@ defmodule Poster.Blog do
   """
   def update_post(%Post{} = post, attrs) do
     post
-    |> Post.changeset(attrs)
+    |> Post.update_changeset(attrs)
     |> Repo.update()
   end
 

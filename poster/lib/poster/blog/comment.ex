@@ -18,6 +18,7 @@ defmodule Poster.Blog.Comment do
     comment
     |> cast(attrs, [:body])
     |> validate_required([:body])
+    |> validate_length(:body, min: 1, max: 240)
     |> put_assoc(:post, post)
   end
 
@@ -25,6 +26,7 @@ defmodule Poster.Blog.Comment do
   def update_changeset(comment, attrs) do
     comment
     |> cast(attrs, [:body])
+    |> validate_length(:body, min: 1, max: 240)
     |> validate_required([:body])
   end
 end

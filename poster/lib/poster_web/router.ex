@@ -21,6 +21,11 @@ defmodule PosterWeb.Router do
     resources "/posts", PostController
   end
 
+  scope "/api", PosterWeb do
+    pipe_through :api
+    resources "/comments", CommentController, except: [:new, :edit]
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", PosterWeb do
   #   pipe_through :api

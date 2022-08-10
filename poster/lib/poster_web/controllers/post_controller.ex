@@ -28,7 +28,12 @@ defmodule PosterWeb.PostController do
 
   def show(conn, %{"id" => id}) do
     post = Blog.get_post!(id)
-    render(conn, "show.html", post: post)
+
+    {:ok, html_doc, []} = Earmark.as_html(post.body)
+
+    conn
+    |> assign(:rendered_markdown, html_doc)
+    |> render("show.html", post: post)
   end
 
   def edit(conn, %{"id" => id}) do

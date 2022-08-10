@@ -1,18 +1,16 @@
-<h1>Show Post</h1>
-
-<ul>
-
-  <li>
-    <strong>Title:</strong>
-    <%= @post.title %>
-  </li>
-
-  <li>
-    <strong>Body:</strong>
-    <%= @post.body %>
-  </li>
-
-</ul>
+<div class="flex justify-center w-full">
+  <div class="prose">
+    <h1 class="text-3xl font-bold">
+      <%= @post.title %>
+    </h1>
+    <p>Written by: Anonymous</p>
+    <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
+    <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
+    <div>
+      <%= html_escape(raw(@rendered_markdown)) %>
+    </div>
+  </div>
+</div>
 
 <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post) %></span> |
 <span><%= link "Back", to: Routes.post_path(@conn, :index) %></span>

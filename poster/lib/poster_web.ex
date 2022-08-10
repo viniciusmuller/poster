@@ -88,6 +88,7 @@ defmodule PosterWeb do
     quote do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+      use PhoenixHtmlSanitizer, :basic_html
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers

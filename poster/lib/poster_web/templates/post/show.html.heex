@@ -7,7 +7,7 @@
     <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
     <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
     <div>
-      <%= html_escape(raw(@rendered_markdown)) %>
+      <%= raw(safe_html(@rendered_markdown)) %>
     </div>
   </div>
 </div>

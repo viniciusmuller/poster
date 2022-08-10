@@ -29,7 +29,18 @@ defmodule PosterWeb.PostControllerTest do
       assert redirected_to(conn) == Routes.post_path(conn, :show, id)
 
       conn = get(conn, Routes.post_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Post"
+      assert html_response(conn, 200) =~ @create_attrs.title
+    end
+
+    test "escapes unsafe xss payloads", %{conn: conn} do
+      malicious_payload = "<script>alert('danger')</script>"
+      conn = post(conn, Routes.post_path(conn, :create), post: %{@create_attrs | body: malicious_payload})
+
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.post_path(conn, :show, id)
+
+      conn = get(conn, Routes.post_path(conn, :show, id))
+      refute html_response(conn, 200) =~ malicious_payload
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

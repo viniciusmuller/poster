@@ -26,6 +26,7 @@ config :poster, PosterWeb.Endpoint,
   secret_key_base: "tuzaUSrY5SRFfyZAQdJOo57+XIQlb6YfBsIDa3z/Hqxom6PPdRKYIqFoMYpr5jIv",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]},
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 

@@ -1,4 +1,6 @@
-<h1>New Post</h1>
+<h1 class="text-3xl font-bold pb-2">
+    New Post
+</h1>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :create)) %>
 

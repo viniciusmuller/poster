@@ -1,3 +1,12 @@
+<script>
+  function renderMarkdown() {
+    const markdownValue = document.getElementById("markdown-input").value;
+    let markdownTarget = document.getElementById("rendered-markdown");
+    const sanitized = DOMPurify.sanitize(marked.parse(markdownValue)); // IMPORTANT: Prevent XSS attacks
+    markdownTarget.innerHTML = sanitized;
+  }
+</script>
+
 <.form let={f} for={@changeset} action={@action}>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
@@ -5,15 +14,21 @@
     </div>
   <% end %>
 
-  <%= label f, :title %>
-  <%= text_input f, :title %>
+  <%= label f, :title, class: "block" %>
+  <%= text_input f, :title, class: "w-3/5 lg:w-1/4 rounded border-gray-300 mb-1" %>
   <%= error_tag f, :title %>
 
-  <%= label f, :body %>
-  <%= text_input f, :body %>
-  <%= error_tag f, :body %>
+  <div class="flex flex-wrap w-full">
+    <div class="w-full md:w-1/2 mr-6">
+        <%= label f, :body, class: "block" %>
+        <%= textarea f, :body, id: "markdown-input", class: "w-full h-64 text-sm text-gray-900 border-gray-300 rounded-lg border focus:ring-blue-500 focus:border-blue-500", placeholder: "Your post", onkeyup: "renderMarkdown()" %>
+        <%= error_tag f, :body %>
+    </div>
+
+    <div id="rendered-markdown" class="prose border p-3 border-gray-100 w-full mh-64 mt-6"></div>
+  </div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit("Create Post", to: Routes.post_path(@conn, :new), class: "bg-blue-500 flex content-center items-center hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 mr-4 rounded") %>
   </div>
 </.form>

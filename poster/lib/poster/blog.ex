@@ -17,8 +17,8 @@ defmodule Poster.Blog do
       [%Post{}, ...]
 
   """
-  def list_posts do
-    Repo.all(Post)
+  def list_posts(preloads \\ []) do
+    Repo.all(Post) |> Repo.preload(preloads)
   end
 
   @doc """
@@ -51,9 +51,9 @@ defmodule Poster.Blog do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post_by_slug!(slug) do
+  def get_post_by_slug!(slug, preloads \\ []) do
     query = from p in Post, where: p.slug == ^slug
-    Repo.one!(query)
+    Repo.one!(query) |> Repo.preload(preloads)
   end
 
   @doc """

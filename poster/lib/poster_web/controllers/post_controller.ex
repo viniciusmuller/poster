@@ -5,7 +5,7 @@ defmodule PosterWeb.PostController do
   alias Poster.Blog.Post
 
   def index(conn, _params) do
-    posts = Blog.list_posts()
+    posts = Blog.list_posts([:comments])
     render(conn, "index.html", posts: posts)
   end
 
@@ -27,7 +27,7 @@ defmodule PosterWeb.PostController do
   end
 
   def show(conn, %{"slug" => slug}) do
-    post = Blog.get_post_by_slug!(slug)
+    post = Blog.get_post_by_slug!(slug, [:comments])
 
     {:ok, html_doc, []} = Earmark.as_html(post.body)
 

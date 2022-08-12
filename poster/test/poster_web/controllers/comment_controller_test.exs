@@ -1,9 +1,9 @@
 defmodule PosterWeb.CommentControllerTest do
   use PosterWeb.ConnCase
 
-  import Poster.BlogFixtures
+  import Poster.PostsFixtures
 
-  alias Poster.Blog.Comment
+  alias Poster.Posts.Comment
 
   @create_attrs %{
     body: "some body"

@@ -1,7 +1,7 @@
 defmodule PosterWeb.PostControllerTest do
   use PosterWeb.ConnCase
 
-  import Poster.BlogFixtures
+  import Poster.PostsFixtures
 
   @create_attrs %{body: "some body some body some body ", title: "some title"}
   @update_attrs %{body: "some updated body once told me the world", title: "some updated title"}

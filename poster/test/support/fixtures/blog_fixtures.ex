@@ -1,7 +1,7 @@
-defmodule Poster.BlogFixtures do
+defmodule Poster.PostsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Poster.Blog` context.
+  entities via the `Poster.Posts` context.
   """
 
   @doc """
@@ -14,7 +14,7 @@ defmodule Poster.BlogFixtures do
         body: "some body once told me the world",
         title: "some title"
       })
-      |> Poster.Blog.create_post()
+      |> Poster.Posts.create_post()
 
     post
   end
@@ -30,7 +30,7 @@ defmodule Poster.BlogFixtures do
       |> Enum.into(%{
         body: "some body"
       })
-      |> Poster.Blog.create_comment(post)
+      |> Poster.Posts.create_comment(post)
 
     comment
   end

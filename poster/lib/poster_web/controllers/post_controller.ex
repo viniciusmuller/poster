@@ -1,21 +1,21 @@
 defmodule PosterWeb.PostController do
   use PosterWeb, :controller
 
-  alias Poster.Blog
-  alias Poster.Blog.Post
+  alias Poster.Posts
+  alias Poster.Posts.Post
 
   def index(conn, _params) do
-    posts = Blog.list_posts([:comments])
+    posts = Posts.list_posts([:comments])
     render(conn, "index.html", posts: posts)
   end
 
   def new(conn, _params) do
-    changeset = Blog.change_post(%Post{})
+    changeset = Posts.change_post(%Post{})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"post" => post_params}) do
-    case Blog.create_post(post_params) do
+    case Posts.create_post(post_params) do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post created successfully.")
@@ -27,7 +27,7 @@ defmodule PosterWeb.PostController do
   end
 
   def show(conn, %{"slug" => slug}) do
-    post = Blog.get_post_by_slug!(slug, [:comments])
+    post = Posts.get_post_by_slug!(slug, [:comments])
 
     {:ok, html_doc, []} = Earmark.as_html(post.body)
 
@@ -37,15 +37,15 @@ defmodule PosterWeb.PostController do
   end
 
   def edit(conn, %{"slug" => slug}) do
-    post = Blog.get_post_by_slug!(slug)
-    changeset = Blog.change_post(post)
+    post = Posts.get_post_by_slug!(slug)
+    changeset = Posts.change_post(post)
     render(conn, "edit.html", post: post, changeset: changeset)
   end
 
   def update(conn, %{"slug" => slug, "post" => post_params}) do
-    post = Blog.get_post_by_slug!(slug)
+    post = Posts.get_post_by_slug!(slug)
 
-    case Blog.update_post(post, post_params) do
+    case Posts.update_post(post, post_params) do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post updated successfully.")
@@ -57,8 +57,8 @@ defmodule PosterWeb.PostController do
   end
 
   def delete(conn, %{"slug" => slug}) do
-    post = Blog.get_post_by_slug!(slug)
-    {:ok, _post} = Blog.delete_post(post)
+    post = Posts.get_post_by_slug!(slug)
+    {:ok, _post} = Posts.delete_post(post)
 
     conn
     |> put_flash(:info, "Post deleted successfully.")

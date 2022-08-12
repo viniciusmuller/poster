@@ -1,4 +1,4 @@
-defmodule Poster.Blog.Comment do
+defmodule Poster.Posts.Comment do
   @moduledoc false
 
   use Ecto.Schema
@@ -8,7 +8,7 @@ defmodule Poster.Blog.Comment do
   @foreign_key_type :binary_id
   schema "comments" do
     field :body, :string
-    belongs_to :post, Poster.Blog.Post
+    belongs_to :post, Poster.Posts.Post
 
     timestamps()
   end

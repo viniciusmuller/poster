@@ -1,4 +1,4 @@
-defmodule Poster.Blog.Post do
+defmodule Poster.Posts.Post do
   @moduledoc false
 
   use Ecto.Schema
@@ -10,7 +10,7 @@ defmodule Poster.Blog.Post do
     field :body, :string
     field :title, :string
     field :slug, :string
-    has_many :comments, Poster.Blog.Comment
+    has_many :comments, Poster.Posts.Comment
 
     timestamps()
   end

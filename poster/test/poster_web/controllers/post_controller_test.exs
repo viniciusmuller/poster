@@ -2,7 +2,6 @@ defmodule PosterWeb.PostControllerTest do
   use PosterWeb.ConnCase
 
   import Poster.PostsFixtures
-  import Poster.AccountsFixtures
   import Poster.BlogFixtures
 
   alias Poster.Accounts

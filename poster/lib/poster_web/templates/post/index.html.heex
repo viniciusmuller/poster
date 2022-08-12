@@ -33,6 +33,7 @@
           <div>
             <h2 class="text-2xl text-blue-400 hover:underline"><%= link post.title, to: Routes.post_path(@conn, :show, post.slug) %></h2>
             <h2 class="text-xl">Author: <%= author_name(post) %></h2>
+            <h2 class="text-xl">Tags: <%= post.tags_raw %></h2>
 
             <%= if length(post.comments) == 1 do %>
               <h2 class="text-xl">1 commentary</h2>

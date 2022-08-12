@@ -13,6 +13,8 @@ defmodule Poster.Posts.Post do
     field :title, :string
     field :slug, :string
     field :thumbnail_url, :string
+    field :tags_raw, :string, default: ""
+    has_many :tags, Poster.Tags.Tag
     has_many :comments, Poster.Posts.Comment
     belongs_to :author, Poster.Blog.Author
 
@@ -22,9 +24,10 @@ defmodule Poster.Posts.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :body])
+    |> cast(attrs, [:title, :body, :tags_raw])
     |> validate_required([:title, :body])
     |> validate_length(:body, min: 10, max: 2000)
+    |> validate_length(:tags_raw, max: 400, message: "too many tags")
     |> validate_length(:title, min: 1, max: 80)
     |> create_slug()
     |> find_cover()

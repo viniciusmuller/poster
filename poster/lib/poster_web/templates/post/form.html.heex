@@ -9,6 +9,10 @@
   <%= text_input f, :title, class: "w-3/5 lg:w-1/4 rounded border-gray-300 mb-1" %>
   <%= error_tag f, :title %>
 
+  <%= label f, :tags_raw, "Tags (comma separated)", class: "block" %>
+  <%= text_input f, :tags_raw, class: "w-3/5 lg:w-1/4 rounded border-gray-300 mb-1" %>
+  <%= error_tag f, :tags_raw %>
+
   <div class="flex flex-wrap w-full">
     <div class="w-full md:w-1/2 mr-6">
         <%= label f, :body, class: "block" %>

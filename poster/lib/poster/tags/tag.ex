@@ -1,0 +1,21 @@
+defmodule Poster.Tags.Tag do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+  schema "tags" do
+    field :title, :string
+    has_many :posts, Poster.Posts.Post
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(tag, attrs) do
+    tag
+    |> cast(attrs, [:title])
+    |> validate_length(:title, min: 1, max: 20)
+    |> validate_required([:title])
+  end
+end

@@ -79,7 +79,19 @@ defmodule Poster.Posts do
     |> Repo.insert()
   end
 
-  def create_post(%Author{} = author, attrs) do
+  @doc """
+  Creates a post.
+
+  ## Examples
+
+      iex> create_post_with_author(%{field: value}, %Author{})
+      {:ok, %Post{}}
+
+      iex> create_post_with_author(%{field: bad_value}, %Author{})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_post_with_author(attrs \\ %{}, %Author{} = author) do
     %Post{}
     |> Post.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:author, author)
@@ -171,24 +183,37 @@ defmodule Poster.Posts do
 
   ## Examples
 
-      iex> create_comment(%{field: value})
+      iex> create_comment(%{field: value}, %Post{})
       {:ok, %Comment{}}
 
-      iex> create_comment(%{field: bad_value})
+      iex> create_comment(%{field: bad_value}, %Post{})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_comment(attrs \\ %{}, %Post{} = post, author \\ nil) do
+  def create_comment(attrs \\ %{}, %Post{} = post) do
     %Comment{}
     |> Comment.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:post, post)
-    |> then(fn changeset ->
-      case author do
-        # anonymous user
-        nil -> changeset
-        %Author{} -> Ecto.Changeset.put_assoc(changeset, :author, author)
-      end
-    end)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a comment associating it with an author.
+
+  ## Examples
+
+      iex> create_comment(%{field: value}, %Post{}, %Author{})
+      {:ok, %Comment{}}
+
+      iex> create_comment(%{field: bad_value}, %Post{}, %Author{})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_comment_with_author(attrs \\ %{}, %Post{} = post, author = %Author{}) do
+    %Comment{}
+    |> Comment.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:post, post)
+    |> Ecto.Changeset.put_assoc(:author, author)
     |> Repo.insert()
   end
 

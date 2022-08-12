@@ -7,6 +7,7 @@ defmodule Poster.Blog do
   alias Poster.Repo
 
   alias Poster.Blog.Author
+  alias Poster.Posts.{Comment, Post}
 
   @doc """
   Returns the list of authors.
@@ -53,6 +54,17 @@ defmodule Poster.Blog do
     %Author{}
     |> Author.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Checks whether an author is owner of certain resource.
+  """
+  def is_owner?(%Author{} = author, %Post{} = post) do
+    author.id == post.author_id
+  end
+
+  def is_owner?(%Author{} = author, %Comment{} = comment) do
+    author.id == comment.author_id
   end
 
   @doc """

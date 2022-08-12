@@ -1,7 +1,11 @@
 defmodule PosterWeb.CommentController do
   use PosterWeb, :controller
 
+  import PosterWeb.UserAuth
+  plug :require_authenticated_user, [type: :api] when action in [:update, :delete]
+
   alias Poster.Posts
+  alias Poster.Blog
   alias Poster.Posts.Comment
 
   action_fallback PosterWeb.FallbackController
@@ -23,6 +27,7 @@ defmodule PosterWeb.CommentController do
       |> render("show.json", comment: comment)
     else
       :error ->
+        # TODO Maybe use schema to validate
         conn |> put_status(:unprocessable_entity) |> json(%{error: "post_id field not found"})
     end
   end
@@ -34,19 +39,20 @@ defmodule PosterWeb.CommentController do
         Posts.create_comment(attrs, post)
 
       user ->
-        Posts.create_comment(attrs, post, user.author)
+        Posts.create_comment_with_author(attrs, post, user.author)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    comment = Posts.get_comment!(id, [:post])
+    comment = Posts.get_comment!(id, [:post, :author])
     render(conn, "show.json", comment: comment)
   end
 
   def update(conn, %{"id" => id, "comment" => comment_params}) do
-    comment = Posts.get_comment!(id, [:post])
+    comment = Posts.get_comment!(id, [:post, :author])
 
-    with {:ok, %Comment{} = comment} <- Posts.update_comment(comment, comment_params) do
+    with :ok <- ensure_ownership(get_author(conn), comment),
+         {:ok, %Comment{} = comment} <- Posts.update_comment(comment, comment_params) do
       render(conn, "show.json", comment: comment)
     end
   end
@@ -54,8 +60,20 @@ defmodule PosterWeb.CommentController do
   def delete(conn, %{"id" => id}) do
     comment = Posts.get_comment!(id)
 
-    with {:ok, %Comment{}} <- Posts.delete_comment(comment) do
+    with :ok <- ensure_ownership(get_author(conn), comment),
+         {:ok, %Comment{}} <- Posts.delete_comment(comment) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  defp ensure_ownership(author, comment) do
+    case Blog.is_owner?(author, comment) do
+      true -> :ok
+      false -> {:error, :api_forbidden}
+    end
+  end
+
+  defp get_author(conn) do
+    conn.assigns.current_user.author
   end
 end

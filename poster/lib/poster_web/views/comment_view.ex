@@ -11,16 +11,18 @@ defmodule PosterWeb.CommentView do
   end
 
   def render("comment.json", %{comment: comment}) do
-    base = %{
+    %{
       id: comment.id,
       body: comment.body,
       post_id: comment.post_id,
+      author:
+        if not is_nil(comment.author_id) do
+          %{
+            name: comment.author.name
+          }
+        else
+          nil
+        end
     }
-    case comment.author do
-      %Ecto.Association.NotLoaded{} -> base
-      author -> Map.put(base, :author, %{
-          name: author.name
-      })
-    end
   end
 end

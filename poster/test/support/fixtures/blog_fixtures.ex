@@ -4,6 +4,8 @@ defmodule Poster.BlogFixtures do
   entities via the `Poster.Blog` context.
   """
 
+  import Poster.AccountsFixtures
+
   @doc """
   Generate a author.
   """
@@ -16,5 +18,13 @@ defmodule Poster.BlogFixtures do
       |> Poster.Blog.create_author()
 
     author
+  end
+
+  @doc """
+  Generate an author associated with an user account.
+  """
+  def user_author_fixture(attrs \\ %{}) do
+    user = user_fixture(attrs)
+    user |> Poster.Repo.preload(:author)
   end
 end

@@ -39,12 +39,12 @@ defmodule Poster.PostsTest do
       assert {:error, %Ecto.Changeset{}} = Posts.create_post(@invalid_attrs)
     end
 
-    test "create_post/2 associates post with an author" do
+    test "create_post_with_author/2 associates post with an author" do
       valid_attrs = %{body: "some body once told me the world", title: "some title"}
       author = author_fixture(%{name: "create_post/2"})
 
       assert {:ok, %Post{author: %Author{name: "create_post/2"}}} =
-               Posts.create_post(author, valid_attrs)
+               Posts.create_post_with_author(valid_attrs, author)
     end
 
     test "update_post/2 with valid data updates the post" do
@@ -106,13 +106,13 @@ defmodule Poster.PostsTest do
       assert {:error, %Ecto.Changeset{}} = Posts.create_comment(@invalid_attrs, post)
     end
 
-    test "create_comment/3 associates an author with the comment" do
+    test "create_comment_with_author/3 associates an author with the comment" do
       valid_attrs = %{body: "some body"}
       %Author{id: author_id} = author = author_fixture()
       post = post_fixture()
 
       assert {:ok, %Comment{author_id: ^author_id}} =
-               Posts.create_comment(valid_attrs, post, author)
+               Posts.create_comment_with_author(valid_attrs, post, author)
     end
 
     test "update_comment/2 with valid data updates the comment" do

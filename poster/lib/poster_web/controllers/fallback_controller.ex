@@ -27,4 +27,10 @@ defmodule PosterWeb.FallbackController do
     |> put_flash(:error, "You have no permissions to perform that action.")
     |> redirect(to: "/")
   end
+
+  def call(conn, {:error, :api_forbidden}) do
+    conn
+    |> put_status(:forbidden)
+    |> put_view(PosterWeb.ErrorView)
+  end
 end

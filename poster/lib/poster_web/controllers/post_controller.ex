@@ -1,11 +1,13 @@
 defmodule PosterWeb.PostController do
   use PosterWeb, :controller
-  import PosterWeb.UserAuth
 
-  plug(:require_authenticated_user when action in [:edit])
+  import PosterWeb.UserAuth
+  plug :require_authenticated_user when action in [:edit, :update, :delete]
+
   action_fallback(PosterWeb.FallbackController)
 
   alias Poster.Posts
+  alias Poster.Blog
   alias Poster.Posts.Post
 
   def index(conn, _params) do
@@ -26,7 +28,7 @@ defmodule PosterWeb.PostController do
           Posts.create_post(post_params)
 
         user ->
-          Posts.create_post(user.author, post_params)
+          Posts.create_post_with_author(post_params, user.author)
       end
 
     case created_post do
@@ -59,33 +61,42 @@ defmodule PosterWeb.PostController do
     end
   end
 
-  defp ensure_ownership(author, post) do
-    case post.author_id == author.id do
-      true -> :ok
-      false -> {:error, :forbidden}
-    end
-  end
-
   def update(conn, %{"slug" => slug, "post" => post_params}) do
     post = Posts.get_post_by_slug!(slug)
 
-    case Posts.update_post(post, post_params) do
-      {:ok, post} ->
-        conn
-        |> put_flash(:info, "Post updated successfully.")
-        |> redirect(to: Routes.post_path(conn, :show, post.slug))
+    with :ok <- ensure_ownership(get_author(conn), post) do
+      case Posts.update_post(post, post_params) do
+        {:ok, post} ->
+          conn
+          |> put_flash(:info, "Post updated successfully.")
+          |> redirect(to: Routes.post_path(conn, :show, post.slug))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", post: post, changeset: changeset)
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", post: post, changeset: changeset)
+      end
     end
   end
 
   def delete(conn, %{"slug" => slug}) do
     post = Posts.get_post_by_slug!(slug)
-    {:ok, _post} = Posts.delete_post(post)
 
-    conn
-    |> put_flash(:info, "Post deleted successfully.")
-    |> redirect(to: Routes.post_path(conn, :index))
+    with :ok <- ensure_ownership(get_author(conn), post) do
+      {:ok, _post} = Posts.delete_post(post)
+
+      conn
+      |> put_flash(:info, "Post deleted successfully.")
+      |> redirect(to: Routes.post_path(conn, :index))
+    end
+  end
+
+  defp ensure_ownership(author, post) do
+    case Blog.is_owner?(author, post) do
+      true -> :ok
+      false -> {:error, :forbidden}
+    end
+  end
+
+  defp get_author(conn) do
+    conn.assigns.current_user.author
   end
 end

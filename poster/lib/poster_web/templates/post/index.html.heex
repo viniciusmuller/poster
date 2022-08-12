@@ -33,12 +33,15 @@
           <div>
             <h2 class="text-2xl text-blue-400 hover:underline"><%= link post.title, to: Routes.post_path(@conn, :show, post.slug) %></h2>
             <h2 class="text-xl">Author: <%= author_name(post) %></h2>
-            <h2 class="text-xl">Tags: <%= post.tags_raw %></h2>
+
+            <%= if String.length(post.tags_raw) > 0 do %>
+              <h2 class="text-xl">Tags: <%= post.tags_raw %></h2>
+            <% end %>
 
             <%= if length(post.comments) == 1 do %>
               <h2 class="text-xl">1 commentary</h2>
             <% else %>
-              <h2 class="text-xl"><%= length(post.comments) %> commentaries</h2>
+              <h2 class="text-xl"><%= length(post.comments) %> comments</h2>
             <% end %>
             <p><%= post.body %></p>
           </div>

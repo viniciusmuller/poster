@@ -1,4 +1,8 @@
 defmodule Poster.Markdown do
+  @moduledoc """
+  Provides helper functions related to markdown
+  """
+
   @doc """
   Converts markdown to HTML
 

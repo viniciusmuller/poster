@@ -1,4 +1,6 @@
 defmodule Poster.Accounts.UserNotifier do
+  @moduledoc false
+
   import Swoosh.Email
 
   alias Poster.Mailer

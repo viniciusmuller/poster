@@ -27,8 +27,7 @@ defmodule PosterWeb.CommentController do
       |> render("show.json", comment: comment)
     else
       :error ->
-        # TODO Maybe use schema to validate
-        conn |> put_status(:unprocessable_entity) |> json(%{error: "post_id field not found"})
+        conn |> put_status(:unprocessable_entity) |> json(%{error: "invalid data"})
     end
   end
 

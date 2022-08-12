@@ -22,8 +22,6 @@ defmodule PosterWeb.Router do
   scope "/", PosterWeb do
     pipe_through :browser
 
-    # get "/", PageController, :index
-    # TODO: Will this be the main page?
     resources "/", PostController, param: "slug"
   end
 

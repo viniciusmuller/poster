@@ -16,12 +16,12 @@ defmodule PosterWeb.CommentView do
       body: comment.body,
       post_id: comment.post_id,
       author:
-        if not is_nil(comment.author_id) do
+        if is_nil(comment.author_id) do
+          nil
+        else
           %{
             name: comment.author.name
           }
-        else
-          nil
         end
     }
   end

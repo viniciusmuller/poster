@@ -133,7 +133,6 @@ defmodule PosterWeb.CommentControllerTest do
     test "fails to delete comment when unauthenticated", %{
       conn: conn,
       comment: comment,
-      user: user
     } do
       conn = put(conn, Routes.comment_path(conn, :update, comment))
       assert conn.status == 401
@@ -157,7 +156,7 @@ defmodule PosterWeb.CommentControllerTest do
   describe "delete comment - unauthenticated" do
     setup [:create_comment_with_author]
 
-    test "fails to edit comment when unauthenticated", %{conn: conn, comment: comment, user: user} do
+    test "fails to edit comment when unauthenticated", %{conn: conn, comment: comment} do
       conn = delete(conn, Routes.comment_path(conn, :update, comment))
       assert conn.status == 401
     end
@@ -166,7 +165,7 @@ defmodule PosterWeb.CommentControllerTest do
   describe "delete comment - unauthorized" do
     setup [:create_comment_with_author, :add_author, :authenticate]
 
-    test "fails to delete comment when unauthorized", %{conn: conn, comment: comment, user: user} do
+    test "fails to delete comment when unauthorized", %{conn: conn, comment: comment} do
       conn = delete(conn, Routes.comment_path(conn, :delete, comment))
       assert conn.status == 403
 
@@ -178,7 +177,7 @@ defmodule PosterWeb.CommentControllerTest do
   describe "delete comment - authorized" do
     setup [:create_comment_with_author, :authenticate]
 
-    test "deletes chosen comment when authenticated", %{conn: conn, comment: comment, user: user} do
+    test "deletes chosen comment when authenticated", %{conn: conn, comment: comment} do
       conn = delete(conn, Routes.comment_path(conn, :delete, comment))
       assert conn.status == 204
 

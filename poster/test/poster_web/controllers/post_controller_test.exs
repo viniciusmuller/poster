@@ -119,7 +119,7 @@ defmodule PosterWeb.PostControllerTest do
   describe "update post - authenticated " do
     setup [:create_post_with_author, :authenticate]
 
-    test "redirects to post when data is valid", %{conn: conn, post: post, user: user} do
+    test "redirects to post when data is valid", %{conn: conn, post: post} do
       conn = put(conn, Routes.post_path(conn, :update, post.slug), post: @update_attrs)
       assert redirected_to(conn) == Routes.post_path(conn, :show, post.slug)
 
@@ -127,7 +127,7 @@ defmodule PosterWeb.PostControllerTest do
       assert html_response(conn, 200) =~ "some updated body"
     end
 
-    test "renders errors when data is invalid", %{conn: conn, post: post, user: user} do
+    test "renders errors when data is invalid", %{conn: conn, post: post} do
       conn = put(conn, Routes.post_path(conn, :update, post.slug), post: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Post"
     end
@@ -166,7 +166,7 @@ defmodule PosterWeb.PostControllerTest do
   describe "delete post - authenticated" do
     setup [:create_post_with_author, :authenticate]
 
-    test "deletes chosen post when authenticated", %{conn: conn, post: post, user: user} do
+    test "deletes chosen post when authenticated", %{conn: conn, post: post} do
       conn = delete(conn, Routes.post_path(conn, :delete, post.slug))
       assert redirected_to(conn) == Routes.post_path(conn, :index)
 

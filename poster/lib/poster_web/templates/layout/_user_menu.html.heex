@@ -1,6 +1,6 @@
 <ul class="list-reset lg:flex justify-end flex-1 items-center">
 <%= if @current_user do %>
-  <li><p class="inline-block px-4 text-gray-400"><%= @current_user.email %></p></li>
+  <li><p class="inline-block px-4 text-gray-400"><%= @current_user.author.name %></p></li>
   <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit),
     class: "inline-block px-4 text-gray-400 hover:text-gray-100" %></li>
   <%# TODO: Reduce boilerplate %>

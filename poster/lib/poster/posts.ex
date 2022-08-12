@@ -168,7 +168,8 @@ defmodule Poster.Posts do
   """
   def create_comment(attrs \\ %{}, post) do
     %Comment{}
-    |> Comment.changeset(post, attrs)
+    |> Comment.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:post, post)
     |> Repo.insert()
   end
 

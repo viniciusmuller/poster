@@ -10,6 +10,14 @@
       <h1 class="text-2xl font-bold mb-4">Register</h1>
 
       <div class="mb-4">
+        <%= inputs_for f, :author, fn cf -> %>
+          <%= label cf, :name, class: "block text-gray-700 text-sm font-bold mb-2"  %>
+          <%= text_input cf, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+          <%= error_tag cf, :name %>
+        <% end %>
+      </div>
+
+      <div class="mb-4">
         <%= label f, :email, class: "block text-gray-700 text-sm font-bold mb-2" %>
         <%= email_input f, :email, required: true, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
         <%= error_tag f, :email %>
@@ -19,9 +27,6 @@
         <%= label f, :password, class: "block text-gray-700 text-sm font-bold mb-2" %>
         <%= password_input f, :password, required: true, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
         <%= error_tag f, :password %>
-      </div>
-
-      <div>
       </div>
 
       <div class="flex items-center justify-between">

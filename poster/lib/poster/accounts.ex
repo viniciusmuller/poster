@@ -7,6 +7,7 @@ defmodule Poster.Accounts do
   alias Poster.Repo
 
   alias Poster.Accounts.{User, UserToken, UserNotifier}
+  alias Poster.Blog.Author
 
   ## Database getters
 
@@ -77,6 +78,7 @@ defmodule Poster.Accounts do
   def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:author, with: &Author.changeset/2, required: true)
     |> Repo.insert()
   end
 
@@ -229,9 +231,9 @@ defmodule Poster.Accounts do
   @doc """
   Gets the user with the given signed token.
   """
-  def get_user_by_session_token(token) do
+  def get_user_by_session_token(token, preloads \\ []) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+    Repo.one(query) |> Repo.preload(preloads)
   end
 
   @doc """

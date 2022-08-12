@@ -14,12 +14,11 @@ defmodule Poster.Posts.Comment do
   end
 
   @doc false
-  def changeset(comment, post, attrs) do
+  def changeset(comment, attrs) do
     comment
     |> cast(attrs, [:body])
     |> validate_required([:body])
     |> validate_length(:body, min: 1, max: 240)
-    |> put_assoc(:post, post)
   end
 
   @doc false

@@ -54,8 +54,16 @@ defmodule Poster.AccountsTest do
 
       assert %{
                password: ["can't be blank"],
-               email: ["can't be blank"]
+               email: ["can't be blank"],
+               author: ["can't be blank"]
              } = errors_on(changeset)
+    end
+
+    test "author is required" do
+      data = %{password: "lksjdflkjsdfdsjklf", email: "aaa@aa.a", author: ""}
+      {:error, changeset} = Accounts.register_user(data)
+
+      assert %{author: ["is invalid"]} = errors_on(changeset)
     end
 
     test "validates email and password when given" do

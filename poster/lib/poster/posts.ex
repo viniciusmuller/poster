@@ -7,6 +7,7 @@ defmodule Poster.Posts do
   alias Poster.Repo
 
   alias Poster.Posts.Post
+  alias Poster.Blog.Author
 
   @doc """
   Returns the list of posts.
@@ -71,6 +72,13 @@ defmodule Poster.Posts do
   def create_post(attrs \\ %{}) do
     %Post{}
     |> Post.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_post(%Author{} = author, attrs) do
+    %Post{}
+    |> Post.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:author, author)
     |> Repo.insert()
   end
 

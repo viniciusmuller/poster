@@ -5,7 +5,7 @@ defmodule PosterWeb.PostController do
   alias Poster.Posts.Post
 
   def index(conn, _params) do
-    posts = Posts.list_posts([:comments])
+    posts = Posts.list_posts([:comments, :author])
     render(conn, "index.html", posts: posts)
   end
 
@@ -15,7 +15,17 @@ defmodule PosterWeb.PostController do
   end
 
   def create(conn, %{"post" => post_params}) do
-    case Posts.create_post(post_params) do
+    created_post =
+      case Map.get(conn.assigns, :current_user) do
+        # anonymous user
+        nil ->
+          Posts.create_post(post_params)
+
+        user ->
+          Posts.create_post(user.author, post_params)
+      end
+
+    case created_post do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post created successfully.")
@@ -27,7 +37,7 @@ defmodule PosterWeb.PostController do
   end
 
   def show(conn, %{"slug" => slug}) do
-    post = Posts.get_post_by_slug!(slug, [:comments])
+    post = Posts.get_post_by_slug!(slug, [:comments, :author])
 
     {:ok, html_doc, []} = Earmark.as_html(post.body)
 

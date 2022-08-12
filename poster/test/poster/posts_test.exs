@@ -5,8 +5,10 @@ defmodule Poster.PostsTest do
 
   describe "posts" do
     alias Poster.Posts.Post
+    alias Poster.Blog.Author
 
     import Poster.PostsFixtures
+    import Poster.BlogFixtures
 
     @invalid_attrs %{body: nil, title: nil}
 
@@ -35,6 +37,14 @@ defmodule Poster.PostsTest do
 
     test "create_post/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Posts.create_post(@invalid_attrs)
+    end
+
+    test "create_post/2 associates post with an author" do
+      valid_attrs = %{body: "some body once told me the world", title: "some title"}
+      author = author_fixture(%{name: "create_post/2"})
+
+      assert {:ok, %Post{author: %Author{name: "create_post/2"}}} =
+               Posts.create_post(author, valid_attrs)
     end
 
     test "update_post/2 with valid data updates the post" do

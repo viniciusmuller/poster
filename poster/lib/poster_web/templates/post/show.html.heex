@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold">
       <%= @post.title %>
     </h1>
-    <p>Written by: Anonymous</p>
+    <p>Written by: <%= author_name(@post) %></p>
     <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
     <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
     <div>

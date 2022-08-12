@@ -11,6 +11,7 @@ defmodule Poster.Posts.Post do
     field :title, :string
     field :slug, :string
     has_many :comments, Poster.Posts.Comment
+    belongs_to :author, Poster.Blog.Author
 
     timestamps()
   end

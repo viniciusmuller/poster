@@ -7,6 +7,7 @@ defmodule Poster.Blog.Author do
   schema "authors" do
     field :name, :string
     belongs_to :user, Poster.Accounts.User
+    has_many :posts, Poster.Posts.Post
 
     timestamps()
   end

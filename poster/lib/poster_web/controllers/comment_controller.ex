@@ -12,9 +12,11 @@ defmodule PosterWeb.CommentController do
   end
 
   def create(conn, %{"comment" => comment_params}) do
+    current_user = conn.assigns.current_user
+
     with {:ok, post_id} <- Map.fetch(comment_params, "post_id"),
          post <- Posts.get_post!(post_id),
-         {:ok, %Comment{} = comment} <- Posts.create_comment(comment_params, post) do
+         {:ok, comment} <- create_post_with_author(comment_params, post, current_user) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.comment_path(conn, :show, comment))
@@ -22,6 +24,17 @@ defmodule PosterWeb.CommentController do
     else
       :error ->
         conn |> put_status(:unprocessable_entity) |> json(%{error: "post_id field not found"})
+    end
+  end
+
+  defp create_post_with_author(attrs, post, current_user) do
+    case current_user do
+      # anonymous user
+      nil ->
+        Posts.create_comment(attrs, post)
+
+      user ->
+        Posts.create_comment(attrs, post, user.author)
     end
   end
 

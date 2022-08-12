@@ -21,4 +21,10 @@ defmodule PosterWeb.FallbackController do
     |> put_view(PosterWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :forbidden}) do
+    conn
+    |> put_flash(:error, "You have no permissions to perform that action.")
+    |> redirect(to: "/")
+  end
 end

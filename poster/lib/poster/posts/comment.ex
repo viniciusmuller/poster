@@ -9,6 +9,7 @@ defmodule Poster.Posts.Comment do
   schema "comments" do
     field :body, :string
     belongs_to :post, Poster.Posts.Post
+    belongs_to :author, Poster.Blog.Author
 
     timestamps()
   end

@@ -24,7 +24,7 @@ defmodule Poster.PostsTest do
 
     test "get_post_by_slug!/1 returns the post with given slug" do
       post = post_fixture()
-      assert Posts.get_post_by_slug!(post.slug) == post
+      assert Posts.get_post_by_slug!(post.slug) == Repo.preload(post, :comments)
     end
 
     test "create_post/1 with valid data creates a post" do
@@ -76,8 +76,10 @@ defmodule Poster.PostsTest do
 
   describe "comments" do
     alias Poster.Posts.Comment
+    alias Poster.Blog.Author
 
     import Poster.PostsFixtures
+    import Poster.BlogFixtures
 
     @invalid_attrs %{body: nil}
 
@@ -91,7 +93,7 @@ defmodule Poster.PostsTest do
       assert Posts.get_comment!(comment.id, [:post]) == comment
     end
 
-    test "create_comment/1 with valid data creates a comment" do
+    test "create_comment/2 with valid data creates a comment" do
       valid_attrs = %{body: "some body"}
       post = post_fixture()
 
@@ -99,8 +101,18 @@ defmodule Poster.PostsTest do
       assert comment.body == "some body"
     end
 
-    test "create_comment/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Posts.create_comment(@invalid_attrs)
+    test "create_comment/2 with invalid data returns error changeset" do
+      post = post_fixture()
+      assert {:error, %Ecto.Changeset{}} = Posts.create_comment(@invalid_attrs, post)
+    end
+
+    test "create_comment/3 associates an author with the comment" do
+      valid_attrs = %{body: "some body"}
+      %Author{id: author_id} = author = author_fixture()
+      post = post_fixture()
+
+      assert {:ok, %Comment{author_id: ^author_id}} =
+               Posts.create_comment(valid_attrs, post, author)
     end
 
     test "update_comment/2 with valid data updates the comment" do

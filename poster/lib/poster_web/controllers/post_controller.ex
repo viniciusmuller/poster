@@ -1,5 +1,9 @@
 defmodule PosterWeb.PostController do
   use PosterWeb, :controller
+  import PosterWeb.UserAuth
+
+  plug(:require_authenticated_user when action in [:edit])
+  action_fallback(PosterWeb.FallbackController)
 
   alias Poster.Posts
   alias Poster.Posts.Post
@@ -49,7 +53,17 @@ defmodule PosterWeb.PostController do
   def edit(conn, %{"slug" => slug}) do
     post = Posts.get_post_by_slug!(slug)
     changeset = Posts.change_post(post)
-    render(conn, "edit.html", post: post, changeset: changeset)
+
+    with :ok <- ensure_ownership(conn.assigns.current_user.author, post) do
+      render(conn, "edit.html", post: post, changeset: changeset)
+    end
+  end
+
+  defp ensure_ownership(author, post) do
+    case post.author_id == author.id do
+      true -> :ok
+      false -> {:error, :forbidden}
+    end
   end
 
   def update(conn, %{"slug" => slug, "post" => post_params}) do

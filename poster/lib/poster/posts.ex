@@ -53,7 +53,11 @@ defmodule Poster.Posts do
 
   """
   def get_post_by_slug!(slug, preloads \\ []) do
-    query = from p in Post, where: p.slug == ^slug
+    query =
+      from p in Post,
+        where: p.slug == ^slug,
+        preload: [comments: :author]
+
     Repo.one!(query) |> Repo.preload(preloads)
   end
 
@@ -174,10 +178,17 @@ defmodule Poster.Posts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_comment(attrs \\ %{}, post) do
+  def create_comment(attrs \\ %{}, %Post{} = post, author \\ nil) do
     %Comment{}
     |> Comment.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:post, post)
+    |> then(fn changeset ->
+      case author do
+        # anonymous user
+        nil -> changeset
+        %Author{} -> Ecto.Changeset.put_assoc(changeset, :author, author)
+      end
+    end)
     |> Repo.insert()
   end
 

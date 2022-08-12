@@ -8,6 +8,7 @@ defmodule Poster.Blog.Author do
     field :name, :string
     belongs_to :user, Poster.Accounts.User
     has_many :posts, Poster.Posts.Post
+    has_many :comments, Poster.Posts.Comment
 
     timestamps()
   end

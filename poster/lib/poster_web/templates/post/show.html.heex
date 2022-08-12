@@ -36,6 +36,7 @@
         });
 
         const comment = await response.json();
+        console.log(comment)
         this.userComments = [comment.data, ...this.userComments];
         this.input = '';
       } catch(e) {
@@ -60,14 +61,15 @@
     <div id="comments" class="content-start">
       <template x-for="comment in userComments">
         <div class="my-2">
-          <h2 class="text-xl">Author: Anonymous</h2>
+          <h2 x-text="`Author: ${comment.author && comment.author.name || 'Anonymous'}`"
+            class="text-xl"></h2>
           <p x-text="comment.body"></p>
         </div>
       </template>
 
       <%= for commentary <- Enum.sort_by(@post.comments, & &1.inserted_at, :desc) do %>
         <div class="my-2">
-          <h2 class="text-xl">Author: Anonymous</h2>
+          <h2 class="text-xl">Author: <%= author_name(commentary) %></h2>
           <p><%= commentary.body %></p>
         </div>
       <% end %>
@@ -83,4 +85,6 @@
 
 </script>
 
-<span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post.slug) %></span>
+<%= if can_edit(assigns.current_user.author, @post) do %>
+  <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post.slug) %></span>
+<% end %>

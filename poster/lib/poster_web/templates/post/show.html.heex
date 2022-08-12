@@ -85,6 +85,6 @@
 
 </script>
 
-<%= if can_edit(assigns.current_user.author, @post) do %>
+<%= if assigns.current_user && can_edit(assigns.current_user.author, @post) do %>
   <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post.slug) %></span>
 <% end %>

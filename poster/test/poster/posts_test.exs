@@ -35,6 +35,22 @@ defmodule Poster.PostsTest do
       assert post.title == "some title"
     end
 
+    test "create_post/1 with valid thumbnail adds thumbnail to it" do
+      thumb_url = "http://test.thumbnail.com/thumb.svg"
+
+      valid_attrs = %{
+        body: """
+        some body once told me the world
+
+        ![thumb](#{thumb_url})
+        """,
+        title: "some title"
+      }
+
+      assert {:ok, %Post{} = post} = Posts.create_post(valid_attrs)
+      assert post.thumbnail_url == thumb_url
+    end
+
     test "create_post/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Posts.create_post(@invalid_attrs)
     end
@@ -54,6 +70,23 @@ defmodule Poster.PostsTest do
       assert {:ok, %Post{} = post} = Posts.update_post(post, update_attrs)
       assert post.body == "some updated body"
       assert post.title == "some updated title"
+    end
+
+    test "update_post/2 updates post thumbnail" do
+      post = post_fixture()
+      thumb_url = "http://test.thumbnail.com/completely_new_image_omg.svg"
+
+      update_attrs = %{
+        body: """
+        some updated body once told me the world
+
+        ![thumb](#{thumb_url})
+        """,
+        title: "some updated title"
+      }
+
+      assert {:ok, %Post{} = post} = Posts.update_post(post, update_attrs)
+      assert post.thumbnail_url == thumb_url
     end
 
     test "update_post/2 with invalid data returns error changeset" do

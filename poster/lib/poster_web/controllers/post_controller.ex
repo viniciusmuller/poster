@@ -7,6 +7,7 @@ defmodule PosterWeb.PostController do
   action_fallback(PosterWeb.FallbackController)
 
   alias Poster.Posts
+  alias Poster.Markdown
   alias Poster.Blog
   alias Poster.Posts.Post
 
@@ -45,7 +46,7 @@ defmodule PosterWeb.PostController do
   def show(conn, %{"slug" => slug}) do
     post = Posts.get_post_by_slug!(slug, [:comments, :author])
 
-    {:ok, html_doc, []} = Earmark.as_html(post.body)
+    html_doc = Markdown.to_html!(post.body)
 
     conn
     |> assign(:rendered_markdown, html_doc)

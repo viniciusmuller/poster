@@ -63,11 +63,11 @@ defmodule PosterWeb.PostControllerTest do
 
       assert conn
              |> get(Routes.post_path(conn, :show, post.slug, page: 1))
-             |> html_response(200) =~ "Next Page"
+             |> html_response(200) =~ ~s(id="pagination-navigation")
 
       assert conn
              |> get(Routes.post_path(conn, :show, post.slug, page: 2))
-             |> html_response(200) =~ "Prev Page"
+             |> html_response(200) =~ ~s(id="pagination-navigation")
     end
   end
 

@@ -32,11 +32,11 @@ defmodule PosterWeb.AuthorControllerTest do
 
       assert conn
              |> get(Routes.author_path(conn, :show, author, page: 1))
-             |> html_response(200) =~ "Page 1 of"
+             |> html_response(200) =~ ~s(id="pagination-navigation")
 
       assert conn
              |> get(Routes.author_path(conn, :show, author, page: 2))
-             |> html_response(200) =~ "Page 2 of"
+             |> html_response(200) =~ ~s(id="pagination-navigation")
     end
 
     test "does not show 'author' in posts", %{conn: conn, author: author} do

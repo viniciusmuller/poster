@@ -8,7 +8,7 @@
   </div>
   <div class="pl-3">
     <h2 class="text-2xl">
-      <%= get_posts_string(@page.entries) %>
+      <%= get_posts_string(@page.total_entries) %>
     </h2>
     <h2 class="text-2xl">
       Joined <%= Date.to_string(@author.inserted_at) %>
@@ -20,14 +20,45 @@
   Recent posts
 </h1>
 
-<h2 class="text-xl mb-2">Page <%= @page.page_number %> of <%= @page.total_pages %></h2>
-<%= if @page.page_number > 1 do %>
-  <%= link "Prev Page", to: Routes.post_path(@conn, :index, page: @page.page_number - 1),
-    class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded" %>
-<% end %>
-<%= if @page.page_number < @page.total_pages do %>
-  <%= link "Next Page", to: Routes.post_path(@conn, :index, page: @page.page_number + 1),
-    class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded" %>
+<%= if @page.total_pages > 1 do %>
+  <nav aria-label="Page navigation" id="pagination-navigation">
+    <ul class="inline-flex space-x-2">
+      <li>
+        <%= link type: "button", to: Routes.author_path(@conn, :show, assigns.author,  %{page: @page.page_number - 1}), class: "hover:cursor-pointer flex items-center justify-center w-10 h-10 text-blue-600 transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-blue-100" do %>
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+        <% end %>
+      </li>
+
+      <li>
+        <%= link type: "button", to: Routes.author_path(@conn, :show, assigns.author, page: 1), class: pagination_button_classes(@page.page_number, 1) do %>
+          1
+        <% end %>
+      </li>
+
+      <%= if @page.page_number > 1 and @page.page_number < @page.total_pages do %>
+        <%= content_tag :p, class: pagination_button_classes(@page.page_number, @page.page_number) do %>
+          <%= @page.page_number %>
+        <% end %>
+      <% end %>
+
+      <%= if @page.total_pages > 1 do %>
+        <li>
+          <%= link type: "button", to: Routes.author_path(@conn, :show, assigns.author, page: @page.total_pages),
+              class: pagination_button_classes(@page.page_number, @page.total_pages) do %>
+            <%= @page.total_pages %>
+          <% end %>
+        </li>
+      <% end %>
+
+      <%= if @page.page_number != @page.total_pages do %>
+        <li>
+          <%= link type: "button", to: Routes.author_path(@conn, :show, assigns.author, page: @page.page_number + 1), class: "flex items-center justify-center w-10 h-10 text-blue-600 transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-blue-100" do %>
+             <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
 <% end %>
 
 <%= render(PosterWeb.PostListView, "index.html", posts: @page.entries, conn: @conn) %>

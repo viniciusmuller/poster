@@ -1,5 +1,16 @@
 ## Development Setup
 
+### Installing development environment
+#### With [asdf](https://asdf-vm.com)
+```sh
+asdf install
+```
+
+#### With [Nix](https://nixos.org/download.html)
+```sh
+nix develop
+```
+
 ### Start dependencies with docker-compose
 ```sh
 docker-compose -f docker-compose.dev.yml up -d

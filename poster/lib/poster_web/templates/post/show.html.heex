@@ -94,7 +94,7 @@
           </template>
 
           <%# TODO: show creation date %>
-          <%= for commentary <- @comments_page.entries do %>
+          <%= for commentary <- @comments do %>
             <div class="my-2">
               <h2 class="text-xl">Author: <%= author_name(commentary) %></h2>
               <p><%= commentary.body %></p>

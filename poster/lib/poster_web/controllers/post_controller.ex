@@ -61,11 +61,13 @@ defmodule PosterWeb.PostController do
       Posts.post_comments(post)
       |> Poster.Repo.paginate(params)
 
+    comments = Poster.Repo.preload(comments_page.entries, :author)
+
     html_doc = Markdown.to_html!(post.body)
 
     conn
     |> assign(:rendered_markdown, html_doc)
-    |> render("show.html", post: post, comments_page: comments_page)
+    |> render("show.html", post: post, comments_page: comments_page, comments: comments)
   end
 
   def edit(conn, %{"slug" => slug}) do

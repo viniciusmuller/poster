@@ -40,6 +40,15 @@ defmodule PosterWeb.PostControllerTest do
     end
   end
 
+  describe "show" do
+    setup [:create_post_with_author]
+
+    test "renders specific posts", %{conn: conn, post: post} do
+      conn = get(conn, Routes.post_path(conn, :show, post.slug))
+      assert html_response(conn, 200) =~ post.title
+    end
+  end
+
   describe "new post" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.post_path(conn, :new))

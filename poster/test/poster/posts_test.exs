@@ -32,7 +32,7 @@ defmodule Poster.PostsTest do
       assert fetched_post.title == post.title
     end
 
-    test "list_posts/0 can query for search terms" do
+    test "list_posts/1 can query for search terms" do
       post_fixture()
       assert [_] = Posts.list_posts("games")
       assert [_] = Posts.list_posts("title")

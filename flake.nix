@@ -14,7 +14,7 @@
       {
         devShell = with pkgs; mkShell {
           buildInputs = [
-            elixir
+            beam.packages.erlangR25.elixir
             elixir_ls
             inotify-tools
             docker-compose

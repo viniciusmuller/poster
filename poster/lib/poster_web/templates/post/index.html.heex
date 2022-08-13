@@ -19,6 +19,20 @@
   </div>
 
   <div class="mt-4">
+    <h2 class="text-xl mb-2">Total results: <%= @page.total_entries %> </h2>
+    <h2 class="text-xl mb-2">Page <%= @page.page_number %> of <%= @page.total_pages %></h2>
+
+    <div class="mb-2">
+      <%= if @page.page_number > 1 do %>
+        <%= link "Prev Page", to: Routes.post_path(@conn, :index, page: @page.page_number - 1),
+          class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded" %>
+      <% end %>
+      <%= if @page.page_number < @page.total_pages do %>
+        <%= link "Next Page", to: Routes.post_path(@conn, :index, page: @page.page_number + 1),
+          class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded" %>
+      <% end %>
+    </div>
+
     <%= for post <- @posts do %>
         <div class="flex border-2 border-gray-200 rounded mb-2 p-2">
             <%= if not is_nil(post.thumbnail_url) do %>

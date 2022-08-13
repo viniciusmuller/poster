@@ -54,7 +54,8 @@ defmodule Poster.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4"},
       {:phoenix_html_sanitizer, "~> 1.1"},
-      {:slugify, "~> 1.3"}
+      {:slugify, "~> 1.3"},
+      {:scrivener_ecto, "~> 2.0"}
     ]
   end
 
@@ -70,7 +71,7 @@ defmodule Poster.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
 end

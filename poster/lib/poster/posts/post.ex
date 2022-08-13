@@ -52,17 +52,21 @@ defmodule Poster.Posts.Post do
     |> product_tags()
   end
 
-  def search(query, nil), do: query
+  def search(query, nil) do
+    from p in query, order_by: [desc: p.inserted_at]
+  end
 
   def search(query, search_term) do
     wildcard_search = "%#{search_term}%"
 
     from post in query,
       join: t in assoc(post, :tags),
+      distinct: post.id,
       where:
         ilike(post.title, ^wildcard_search) or
           ilike(post.body, ^wildcard_search) or
           ilike(t.title, ^wildcard_search),
+      order_by: [desc: post.inserted_at],
       preload: [tags: t]
   end
 
@@ -89,8 +93,6 @@ defmodule Poster.Posts.Post do
   defp product_tags(changeset), do: changeset
 
   defp parse_tags(tags) do
-    # Repo.insert_all requires the inserted_at and updated_at to be filled out
-    # and they should have time truncated to the second that is why we need this
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
     for tag <- String.split(tags, ","),

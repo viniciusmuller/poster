@@ -13,8 +13,18 @@ defmodule PosterWeb.PostController do
 
   def index(conn, params) do
     search_term = get_in(params, ["query"])
-    posts = Posts.list_posts(search_term, [:comments, :author, :tags])
-    render(conn, "index.html", posts: posts)
+
+    page =
+      search_term
+      |> Posts.list_posts()
+      |> Poster.Repo.paginate(params)
+
+    posts = Poster.Repo.preload(page.entries, [:author, :tags, :comments])
+
+    render(conn, "index.html",
+      posts: posts,
+      page: page
+    )
   end
 
   def new(conn, _params) do
@@ -44,14 +54,18 @@ defmodule PosterWeb.PostController do
     end
   end
 
-  def show(conn, %{"slug" => slug}) do
-    post = Posts.get_post_by_slug!(slug, [:comments, :author])
+  def show(conn, %{"slug" => slug} = params) do
+    post = Posts.get_post_by_slug!(slug, [:author])
+
+    comments_page =
+      Posts.post_comments(post)
+      |> Poster.Repo.paginate(params)
 
     html_doc = Markdown.to_html!(post.body)
 
     conn
     |> assign(:rendered_markdown, html_doc)
-    |> render("show.html", post: post)
+    |> render("show.html", post: post, comments_page: comments_page)
   end
 
   def edit(conn, %{"slug" => slug}) do

@@ -65,6 +65,21 @@
             </button>
          </div>
 
+        <%= if @comments_page.total_pages > 1 do %>
+          <h2 class="text-xl mb-2">Page <%= @comments_page.page_number %> of <%= @comments_page.total_pages %></h2>
+        <% end %>
+
+        <div class="flex mb-4">
+          <%= if @comments_page.page_number > 1 do %>
+            <%= link "Prev Page", to: Routes.post_path(@conn, :show, @post.slug, page: @comments_page.page_number - 1),
+              class: "bg-blue-500 h-full flex content-center items-center hover:bg-blue-700 text-white font-bold px-4 mr-4 rounded" %>
+          <% end %>
+          <%= if @comments_page.page_number < @comments_page.total_pages do %>
+            <%= link "Next Page", to: Routes.post_path(@conn, :show, @post.slug, page: @comments_page.page_number + 1),
+              class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 mr-4 rounded" %>
+          <% end %>
+        </div>
+
         <div id="comments" class="content-start">
           <template x-for="comment in userComments">
             <div class="my-2">
@@ -74,7 +89,8 @@
             </div>
           </template>
 
-          <%= for commentary <- Enum.sort_by(@post.comments, & &1.inserted_at, :desc) do %>
+          <%# TODO: show creation date %>
+          <%= for commentary <- @comments_page.entries do %>
             <div class="my-2">
               <h2 class="text-xl">Author: <%= author_name(commentary) %></h2>
               <p><%= commentary.body %></p>
@@ -91,7 +107,7 @@
 <script>
   window.addEventListener('DOMContentLoaded', (event) => {
     const comments = document.getElementById('comments')
-    window.autoAnimate(comments);
+    autoAnimate(comments);
   });
 
 </script>

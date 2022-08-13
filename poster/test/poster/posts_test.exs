@@ -25,7 +25,7 @@ defmodule Poster.PostsTest do
 
     test "list_posts/0 returns all posts" do
       post = post_fixture()
-      [fetched_post] = Posts.list_posts()
+      [fetched_post] = Posts.list_posts() |> Repo.all()
 
       assert fetched_post.id == post.id
       assert fetched_post.body == post.body
@@ -34,10 +34,10 @@ defmodule Poster.PostsTest do
 
     test "list_posts/1 can query for search terms" do
       post_fixture()
-      assert [_] = Posts.list_posts("games")
-      assert [_] = Posts.list_posts("title")
-      assert [_] = Posts.list_posts("told me the world")
-      assert [] = Posts.list_posts("nonsense")
+      assert [_] = Posts.list_posts("games") |> Repo.all()
+      assert [_] = Posts.list_posts("title") |> Repo.all()
+      assert [_] = Posts.list_posts("told me the world") |> Repo.all()
+      assert [] = Posts.list_posts("nonsense") |> Repo.all()
     end
 
     test "get_post!/1 returns the post with given id" do

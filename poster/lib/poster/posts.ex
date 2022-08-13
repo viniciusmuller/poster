@@ -7,6 +7,7 @@ defmodule Poster.Posts do
   alias Poster.Repo
 
   alias Poster.Posts.Post
+  alias Poster.Posts.Comment
   alias Poster.Blog.Author
 
   @doc """
@@ -18,11 +19,8 @@ defmodule Poster.Posts do
       [%Post{}, ...]
 
   """
-  def list_posts(search_term \\ nil, preloads \\ []) do
-    Post
-    |> Post.search(search_term)
-    |> Repo.all()
-    |> Repo.preload(preloads)
+  def list_posts(search_term \\ nil) do
+    Post |> Post.search(search_term)
   end
 
   @doc """
@@ -41,6 +39,15 @@ defmodule Poster.Posts do
   """
   def get_post!(id, preloads \\ []) do
     Repo.get!(Post, id) |> Repo.preload(preloads)
+  end
+
+  @doc """
+  Retrieves comments from a specific posts
+  """
+  def post_comments(%Post{id: id}) do
+    from c in Comment,
+      where: c.post_id == ^id,
+      order_by: [desc: c.inserted_at]
   end
 
   @doc """

@@ -61,6 +61,11 @@ defmodule Poster.PostsTest do
       assert [%Tag{title: "games"}, %Tag{title: "music"}] = post.tags
     end
 
+    test "create_post/1 - post must have at leaset 2 tags" do
+      attrs = %{@valid_attrs | tags_raw: "single tag"}
+      assert {:error, %Ecto.Changeset{}} = Posts.create_post(attrs)
+    end
+
     test "create_post/1 with valid thumbnail adds thumbnail to it" do
       thumb_url = "http://test.thumbnail.com/thumb.svg"
 
@@ -137,7 +142,7 @@ defmodule Poster.PostsTest do
       assert %Ecto.Changeset{} = Posts.change_post(post)
     end
 
-    test "deleting a poster's tag does not deletes the post" do
+    test "deleting a post's tag does not deletes the post" do
       post = post_fixture()
       post.tags |> hd() |> Repo.delete!()
 

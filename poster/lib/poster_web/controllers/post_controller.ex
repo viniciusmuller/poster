@@ -12,11 +12,18 @@ defmodule PosterWeb.PostController do
   alias Poster.Posts.Post
 
   def index(conn, params) do
-    search_term = get_in(params, ["query"])
+    search_term =
+      with query <- get_in(params, ["query"]),
+           true <- query != "" do
+        query
+      else
+        _ -> nil
+      end
 
     page =
       search_term
       |> Posts.list_posts()
+      |> Posts.sort_posts(params)
       |> Poster.Repo.paginate(params)
 
     posts = Poster.Repo.preload(page.entries, [:author, :tags, :comments])

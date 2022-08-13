@@ -52,21 +52,25 @@ defmodule Poster.Posts.Post do
     |> product_tags()
   end
 
-  def search(query, nil) do
-    from p in query, order_by: [desc: p.inserted_at]
-  end
+
+  @doc """
+  Search posts and their tags for a given term.
+
+  Note: Returns duplicated results, distinct needs to be called when sorting.
+  More information: https://github.com/elixir-ecto/ecto/issues/1937
+  """
+  def search(query, nil), do: query
 
   def search(query, search_term) do
     wildcard_search = "%#{search_term}%"
 
     from post in query,
       join: t in assoc(post, :tags),
-      distinct: post.id,
+      # distinct: post.id,
       where:
         ilike(post.title, ^wildcard_search) or
           ilike(post.body, ^wildcard_search) or
           ilike(t.title, ^wildcard_search),
-      order_by: [desc: post.inserted_at],
       preload: [tags: t]
   end
 

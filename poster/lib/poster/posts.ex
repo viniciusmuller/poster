@@ -15,13 +15,42 @@ defmodule Poster.Posts do
 
   ## Examples
 
-      iex> list_posts()
+      iex> list_posts("query")
       [%Post{}, ...]
 
   """
   def list_posts(search_term \\ nil) do
     Post |> Post.search(search_term)
   end
+
+  @doc """
+  Sorts a list of posts by different criteria
+  """
+  def sort_posts(query, %{"sorter" => "Recently updated"} = params) do
+    mode = get_sorting_mode(params)
+
+    case mode do
+      # https://github.com/elixir-ecto/ecto/issues/1937
+      :asc -> query |> distinct([p], true) |> order_by([p], asc: p.updated_at)
+      :desc -> query |> distinct([p], true) |> order_by([p], desc: p.updated_at)
+    end
+  end
+
+  def sort_posts(query, %{"sorter" => "New"} = params) do
+    mode = get_sorting_mode(params)
+
+    case mode do
+      # https://github.com/elixir-ecto/ecto/issues/1937
+      :asc -> query |> distinct([p], true) |> order_by([p], asc: p.inserted_at)
+      :desc -> query |> distinct([p], true) |> order_by([p], desc: p.inserted_at)
+    end
+  end
+
+  def sort_posts(query, _invalid), do: query
+
+  defp get_sorting_mode(%{"mode" => "Ascending"}), do: :asc
+  defp get_sorting_mode(%{"mode" => "Descending"}), do: :desc
+  defp get_sorting_mode(_unkown), do: :desc
 
   @doc """
   Gets a single post.

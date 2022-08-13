@@ -5,6 +5,8 @@ defmodule Poster.Posts.Post do
   import Ecto.Changeset
 
   alias Poster.Markdown
+  alias Poster.Tags.Tag
+  alias Poster.Repo
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -13,8 +15,13 @@ defmodule Poster.Posts.Post do
     field :title, :string
     field :slug, :string
     field :thumbnail_url, :string
-    field :tags_raw, :string, default: ""
-    has_many :tags, Poster.Tags.Tag
+    field :tags_raw, :string, virtual: true
+
+    many_to_many :tags, Poster.Tags.Tag,
+      join_through: Poster.PostTag,
+      on_delete: :delete_all,
+      on_replace: :delete
+
     has_many :comments, Poster.Posts.Comment
     belongs_to :author, Poster.Blog.Author
 
@@ -25,22 +32,60 @@ defmodule Poster.Posts.Post do
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:title, :body, :tags_raw])
-    |> validate_required([:title, :body])
+    |> validate_required([:title, :body, :tags_raw])
     |> validate_length(:body, min: 10, max: 2000)
-    |> validate_length(:tags_raw, max: 400, message: "too many tags")
     |> validate_length(:title, min: 1, max: 80)
     |> create_slug()
     |> find_cover()
+    |> product_tags()
   end
 
   @doc false
   def update_changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :body])
-    |> validate_required([:title, :body])
+    |> cast(attrs, [:title, :body, :tags_raw])
+    |> validate_required([:title, :body, :tags_raw])
     |> validate_length(:body, min: 10, max: 2000)
     |> validate_length(:title, min: 1, max: 80)
     |> find_cover()
+    |> product_tags()
+  end
+
+  def add_raw_tags(changeset, post) do
+    change(changeset, tags_raw: tags_to_string(post.tags))
+  end
+
+  defp tags_to_string(tags) do
+    tags |> Enum.map(& &1.title) |> Enum.join(", ")
+  end
+
+  defp product_tags(%Ecto.Changeset{valid?: true, changes: %{tags_raw: tags}} = changeset) do
+    tags = tags |> parse_tags() |> Enum.uniq_by(& &1.title)
+
+    if is_list(tags) and length(tags) >= 2 do
+      tag_names = for t <- tags, do: t.title
+      tags = Enum.map(tag_names, &get_or_insert_tag/1)
+      Ecto.Changeset.put_assoc(changeset, :tags, tags)
+    else
+      add_error(changeset, :tags_raw, "must have at least 2 tags")
+    end
+  end
+
+  defp product_tags(changeset), do: changeset
+
+  defp parse_tags(tags) do
+    # Repo.insert_all requires the inserted_at and updated_at to be filled out
+    # and they should have time truncated to the second that is why we need this
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+    for tag <- String.split(tags, ","),
+        tag = tag |> String.trim() |> String.downcase(),
+        tag != "",
+        do: %{title: tag, inserted_at: now, updated_at: now}
+  end
+
+  defp get_or_insert_tag(title) do
+    Repo.get_by(Tag, title: title) || Repo.insert!(%Tag{title: title})
   end
 
   defp create_slug(%Ecto.Changeset{valid?: true, changes: %{title: title}} = changeset) do

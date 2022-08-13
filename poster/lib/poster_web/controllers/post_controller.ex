@@ -12,12 +12,12 @@ defmodule PosterWeb.PostController do
   alias Poster.Posts.Post
 
   def index(conn, _params) do
-    posts = Posts.list_posts([:comments, :author])
+    posts = Posts.list_posts([:comments, :author, :tags])
     render(conn, "index.html", posts: posts)
   end
 
   def new(conn, _params) do
-    changeset = Posts.change_post(%Post{})
+    changeset = Posts.change_post(%Post{tags: []})
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -54,16 +54,16 @@ defmodule PosterWeb.PostController do
   end
 
   def edit(conn, %{"slug" => slug}) do
-    post = Posts.get_post_by_slug!(slug)
+    post = Posts.get_post_by_slug!(slug, [:tags])
     changeset = Posts.change_post(post)
 
     with :ok <- ensure_ownership(conn.assigns.current_user.author, post) do
-      render(conn, "edit.html", post: post, changeset: changeset)
+      render(conn, "edit.html", post: post, changeset: Post.add_raw_tags(changeset, post))
     end
   end
 
   def update(conn, %{"slug" => slug, "post" => post_params}) do
-    post = Posts.get_post_by_slug!(slug)
+    post = Posts.get_post_by_slug!(slug, [:tags])
 
     with :ok <- ensure_ownership(get_author(conn), post) do
       case Posts.update_post(post, post_params) do

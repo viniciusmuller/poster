@@ -22,7 +22,11 @@ defmodule PosterWeb.PostView do
     end
   end
 
-  def can_edit(author, post) do
+  def is_owner(author, post) do
     post.author_id == author.id
+  end
+
+  def render_tags(tags) do
+    for(tag <- tags, do: tag.title) |> Enum.join(", ")
   end
 end

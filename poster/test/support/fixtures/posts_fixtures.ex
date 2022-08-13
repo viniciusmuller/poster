@@ -14,9 +14,10 @@ defmodule Poster.PostsFixtures do
       attrs
       |> Enum.into(%{
         body: "some body once told me the world",
-        title: "some title"
+        title: "some title",
+        tags_raw: "music, games"
       })
-      |> Poster.Posts.create_post()
+      |> Poster.Posts.create_post([:tags])
 
     post
   end
@@ -28,7 +29,8 @@ defmodule Poster.PostsFixtures do
     attrs =
       Enum.into(attrs, %{
         body: "some body once told me the world",
-        title: "some title"
+        title: "some title",
+        tags_raw: "music, games"
       })
 
     {:ok, post} = Poster.Posts.create_post_with_author(attrs, author)

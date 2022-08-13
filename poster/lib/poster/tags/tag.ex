@@ -6,7 +6,11 @@ defmodule Poster.Tags.Tag do
   @foreign_key_type :binary_id
   schema "tags" do
     field :title, :string
-    has_many :posts, Poster.Posts.Post
+
+    many_to_many :posts, Poster.Posts.Post,
+      join_through: Poster.PostTag,
+      on_delete: :delete_all,
+      on_replace: :delete
 
     timestamps()
   end

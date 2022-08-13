@@ -4,6 +4,16 @@
       <h1 class="text-3xl font-bold content-left">
         <%= @post.title %>
       </h1>
+
+      <div class="flex">
+        <%= if assigns.current_user && is_owner(assigns.current_user.author, @post) do %>
+          <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post.slug),
+            class: "no-underline bg-blue-500 flex content-center items-center hover:bg-blue-700 text-white font-bold px-4 mr-4 rounded my-2" %></span>
+          <span><%= link "Delete", to: Routes.post_path(@conn, :delete, @post.slug), method: :delete,
+            class: "no-underline bg-red-500 flex content-center items-center hover:bg-red-700 text-white font-bold px-4 mr-4 rounded my-2" %></span>
+        <% end %>
+      </div>
+
       <p>Written by: <%= author_name(@post) %></p>
       <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
       <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
@@ -85,7 +95,3 @@
   });
 
 </script>
-
-<%= if assigns.current_user && can_edit(assigns.current_user.author, @post) do %>
-  <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post.slug) %></span>
-<% end %>

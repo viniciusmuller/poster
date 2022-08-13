@@ -6,8 +6,16 @@ defmodule PosterWeb.PostControllerTest do
 
   alias Poster.Accounts
 
-  @create_attrs %{body: "some body some body some body ", title: "some title"}
-  @update_attrs %{body: "some updated body once told me the world", title: "some updated title"}
+  @create_attrs %{
+    body: "some body some body some body ",
+    title: "some title",
+    tags_raw: "music, games"
+  }
+  @update_attrs %{
+    body: "some updated body once told me the world",
+    title: "some updated title",
+    tags_raw: "music, books"
+  }
   @invalid_attrs %{body: nil, title: nil}
 
   setup %{conn: conn} do

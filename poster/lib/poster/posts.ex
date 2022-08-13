@@ -36,7 +36,9 @@ defmodule Poster.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id, preloads \\ []) do
+    Repo.get!(Post, id) |> Repo.preload(preloads)
+  end
 
   @doc """
   Gets a single post by its slug.
@@ -73,10 +75,15 @@ defmodule Poster.Posts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_post(attrs \\ %{}) do
-    %Post{}
-    |> Post.changeset(attrs)
-    |> Repo.insert()
+  def create_post(attrs \\ %{}, preloads \\ []) do
+    result =
+      %Post{}
+      |> Post.changeset(attrs)
+      |> Repo.insert()
+
+    with {:ok, post} <- result do
+      {:ok, Repo.preload(post, preloads)}
+    end
   end
 
   @doc """

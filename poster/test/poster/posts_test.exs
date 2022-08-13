@@ -6,48 +6,66 @@ defmodule Poster.PostsTest do
   describe "posts" do
     alias Poster.Posts.Post
     alias Poster.Blog.Author
+    alias Poster.Tags.Tag
 
     import Poster.PostsFixtures
     import Poster.BlogFixtures
 
     @invalid_attrs %{body: nil, title: nil}
+    @valid_attrs %{
+      body: "some body once told me the world",
+      title: "some title",
+      tags_raw: "games, music"
+    }
+    @update_attrs %{
+      body: "some updated body",
+      title: "some updated title",
+      tags_raw: "fun, things, big, loud, worker, bees"
+    }
 
     test "list_posts/0 returns all posts" do
       post = post_fixture()
-      assert Posts.list_posts() == [post]
+      [fetched_post] = Posts.list_posts()
+
+      assert fetched_post.id == post.id
+      assert fetched_post.body == post.body
+      assert fetched_post.title == post.title
     end
 
     test "get_post!/1 returns the post with given id" do
       post = post_fixture()
-      assert Posts.get_post!(post.id) == post
+      fetched_post = Posts.get_post!(post.id)
+      assert post.id == fetched_post.id
+      assert post.title == fetched_post.title
     end
 
     test "get_post_by_slug!/1 returns the post with given slug" do
       post = post_fixture()
-      assert Posts.get_post_by_slug!(post.slug) == Repo.preload(post, :comments)
+      post_by_slug = Posts.get_post_by_slug!(post.slug)
+
+      assert post.id == post_by_slug.id
     end
 
     test "create_post/1 with valid data creates a post" do
-      valid_attrs = %{body: "some body once told me the world", title: "some title"}
-
-      assert {:ok, %Post{} = post} = Posts.create_post(valid_attrs)
+      assert {:ok, %Post{} = post} = Posts.create_post(@valid_attrs, [:tags])
       assert post.body == "some body once told me the world"
       assert post.title == "some title"
+      assert [%Tag{title: "games"}, %Tag{title: "music"}] = post.tags
     end
 
     test "create_post/1 with valid thumbnail adds thumbnail to it" do
       thumb_url = "http://test.thumbnail.com/thumb.svg"
 
-      valid_attrs = %{
-        body: """
-        some body once told me the world
+      attrs =
+        Map.merge(@valid_attrs, %{
+          body: """
+          some body once told me the world
 
-        ![thumb](#{thumb_url})
-        """,
-        title: "some title"
-      }
+          ![thumb](#{thumb_url})
+          """
+        })
 
-      assert {:ok, %Post{} = post} = Posts.create_post(valid_attrs)
+      assert {:ok, %Post{} = post} = Posts.create_post(attrs)
       assert post.thumbnail_url == thumb_url
     end
 
@@ -56,43 +74,48 @@ defmodule Poster.PostsTest do
     end
 
     test "create_post_with_author/2 associates post with an author" do
-      valid_attrs = %{body: "some body once told me the world", title: "some title"}
       author = author_fixture(%{name: "create_post/2"})
 
       assert {:ok, %Post{author: %Author{name: "create_post/2"}}} =
-               Posts.create_post_with_author(valid_attrs, author)
+               Posts.create_post_with_author(@valid_attrs, author)
     end
 
     test "update_post/2 with valid data updates the post" do
       post = post_fixture()
-      update_attrs = %{body: "some updated body", title: "some updated title"}
 
-      assert {:ok, %Post{} = post} = Posts.update_post(post, update_attrs)
+      assert {:ok, %Post{} = post} = Posts.update_post(post, @update_attrs)
       assert post.body == "some updated body"
       assert post.title == "some updated title"
+
+      # updates tag
+      %Post{tags: [tag | _]} = Repo.preload(post, :tags)
+      assert tag.title == "fun"
     end
 
     test "update_post/2 updates post thumbnail" do
       post = post_fixture()
       thumb_url = "http://test.thumbnail.com/completely_new_image_omg.svg"
 
-      update_attrs = %{
-        body: """
-        some updated body once told me the world
+      attrs =
+        Map.merge(@update_attrs, %{
+          body: """
+          some updated body once told me the world
 
-        ![thumb](#{thumb_url})
-        """,
-        title: "some updated title"
-      }
+          ![thumb](#{thumb_url})
+          """
+        })
 
-      assert {:ok, %Post{} = post} = Posts.update_post(post, update_attrs)
+      assert {:ok, %Post{} = post} = Posts.update_post(post, attrs)
       assert post.thumbnail_url == thumb_url
     end
 
     test "update_post/2 with invalid data returns error changeset" do
       post = post_fixture()
       assert {:error, %Ecto.Changeset{}} = Posts.update_post(post, @invalid_attrs)
-      assert post == Posts.get_post!(post.id)
+      assert fetched_post = Posts.get_post!(post.id)
+
+      assert fetched_post.title == post.title
+      assert fetched_post.body == post.body
     end
 
     test "delete_post/1 deletes the post" do
@@ -104,6 +127,13 @@ defmodule Poster.PostsTest do
     test "change_post/1 returns a post changeset" do
       post = post_fixture()
       assert %Ecto.Changeset{} = Posts.change_post(post)
+    end
+
+    test "deleting a poster's tag does not deletes the post" do
+      post = post_fixture()
+      post.tags |> hd() |> Repo.delete!()
+
+      assert Posts.get_post!(post.id)
     end
   end
 
@@ -118,12 +148,18 @@ defmodule Poster.PostsTest do
 
     test "list_comments/0 returns all comments" do
       comment = comment_fixture()
-      assert Posts.list_comments([:post]) == [comment]
+      [fetched_comment] = Posts.list_comments()
+
+      assert fetched_comment.id == comment.id
+      assert fetched_comment.body == comment.body
     end
 
     test "get_comment!/1 returns the comment with given id" do
       comment = comment_fixture()
-      assert Posts.get_comment!(comment.id, [:post]) == comment
+      fetched_comment = Posts.get_comment!(comment.id)
+
+      assert fetched_comment.id == comment.id
+      assert fetched_comment.body == comment.body
     end
 
     test "create_comment/2 with valid data creates a comment" do
@@ -160,7 +196,8 @@ defmodule Poster.PostsTest do
       comment = comment_fixture()
       assert {:error, %Ecto.Changeset{}} = Posts.update_comment(comment, @invalid_attrs)
       fetched_comment = Posts.get_comment!(comment.id) |> Poster.Repo.preload(:post)
-      assert comment == fetched_comment
+      assert comment.id == fetched_comment.id
+      assert comment.body == fetched_comment.body
     end
 
     test "delete_comment/1 deletes the comment" do

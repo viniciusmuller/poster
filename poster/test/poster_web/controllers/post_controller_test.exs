@@ -5,6 +5,8 @@ defmodule PosterWeb.PostControllerTest do
   import Poster.BlogFixtures
 
   alias Poster.Accounts
+  alias Poster.Posts
+  alias Poster.Posts.Post
 
   @create_attrs %{
     body: "some body some body some body ",
@@ -46,6 +48,18 @@ defmodule PosterWeb.PostControllerTest do
     test "renders specific posts", %{conn: conn, post: post} do
       conn = get(conn, Routes.post_path(conn, :show, post.slug))
       assert html_response(conn, 200) =~ post.title
+    end
+
+    test "paginates post comments", %{conn: conn, post: post} do
+      for _ <- 1..100, do: {:ok, _comment} = add_comment_to_post(post)
+
+      assert conn
+             |> get(Routes.post_path(conn, :show, post.slug, page: 1))
+             |> html_response(200) =~ "Next Page"
+
+      assert conn
+             |> get(Routes.post_path(conn, :show, post.slug, page: 2))
+             |> html_response(200) =~ "Prev Page"
     end
   end
 
@@ -218,6 +232,10 @@ defmodule PosterWeb.PostControllerTest do
 
   defp add_author(data) do
     Map.put(data, :user, user_author_fixture())
+  end
+
+  defp add_comment_to_post(%Post{} = post) do
+    Posts.create_comment(%{body: "aaaaaaaaaaaaaaaaa"}, post)
   end
 
   defp authenticate(%{user: user, conn: conn} = data) do

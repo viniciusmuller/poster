@@ -1,0 +1,33 @@
+<h1 class="text-3xl font-bold pb-2">
+  <%= @author.name %>'s profile
+</h1>
+
+<div class="flex">
+  <div>
+    <%= img_tag("https://ui-avatars.com/api/?name=#{@author.name}&size=128") %>
+  </div>
+  <div class="pl-3">
+    <h2 class="text-2xl">
+      <%= get_posts_string(@page.entries) %>
+    </h2>
+    <h2 class="text-2xl">
+      Joined <%= Date.to_string(@author.inserted_at) %>
+    </h2>
+  </div>
+</div>
+
+<h1 class="text-3xl py-2">
+  Recent posts
+</h1>
+
+<h2 class="text-xl mb-2">Page <%= @page.page_number %> of <%= @page.total_pages %></h2>
+<%= if @page.page_number > 1 do %>
+  <%= link "Prev Page", to: Routes.post_path(@conn, :index, page: @page.page_number - 1),
+    class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded" %>
+<% end %>
+<%= if @page.page_number < @page.total_pages do %>
+  <%= link "Next Page", to: Routes.post_path(@conn, :index, page: @page.page_number + 1),
+    class: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded" %>
+<% end %>
+
+<%= render(PosterWeb.PostListView, "index.html", posts: @page.entries, conn: @conn) %>

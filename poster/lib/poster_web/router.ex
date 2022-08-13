@@ -23,6 +23,7 @@ defmodule PosterWeb.Router do
     pipe_through :browser
 
     resources "/", PostController, param: "slug"
+    get "/author/:id", AuthorController, :show
   end
 
   scope "/api", PosterWeb do

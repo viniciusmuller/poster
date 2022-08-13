@@ -39,6 +39,16 @@ defmodule Poster.Blog do
   def get_author!(id), do: Repo.get!(Author, id)
 
   @doc """
+  Returns all the posts created by a specific author
+  """
+  def get_author_posts(%Author{} = author) do
+    from p in Post,
+      join: a in assoc(p, :author),
+      on: p.author_id == ^author.id,
+      preload: [:tags, :comments, :author]
+  end
+
+  @doc """
   Creates a author.
 
   ## Examples

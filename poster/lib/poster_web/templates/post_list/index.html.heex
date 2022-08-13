@@ -1,0 +1,39 @@
+<%= for post <- assigns.posts do %>
+  <div class="flex border-2 border-gray-200 rounded mb-2 p-2">
+      <%= if not is_nil(post.thumbnail_url) do %>
+        <div>
+          <img
+            class="mr-2"
+            style="max-height: 125px"
+            src={sanitize(post.thumbnail_url)}
+          >
+        </div>
+      <% end %>
+    <div>
+      <h2 class="text-2xl text-blue-400 hover:underline"><%= link post.title, to: Routes.post_path(assigns.conn, :show, post.slug) %></h2>
+
+      <h2 class="text-xl">
+        <%= if assigns[:show_author] do %>
+          <%= if is_nil(post.author) do %>
+            Author: Anonymous
+          <% else %>
+            Author: <%= link author_name(post), to: Routes.author_path(assigns.conn, :show, post.author), class: "text-blue-700 hover:underline" %>
+          <% end %>
+        <% end %>
+      </h2>
+
+      <%= if length(post.tags) > 0 do %>
+        <h2 class="text-xl">Tags: <%= render_tags(post.tags) %></h2>
+      <% end %>
+
+      <h2 class="text-xl"><%= render_comments_number(post.comments) %></h2>
+
+      <p><%= post.body %></p>
+    </div>
+  </div>
+<% end %>
+
+<%= if length(@posts) == 0 do %>
+  <h2 class="text-2xl">No posts found.</h2>
+<% end %>
+

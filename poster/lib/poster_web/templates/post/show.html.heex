@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center">
   <div class="md:w-1/3">
     <article class="prose">
-      <h1 class="text-3xl font-bold content-left">
+      <h1 class="text-3xl font-bold content-left m-0">
         <%= @post.title %>
       </h1>
 
@@ -17,10 +17,10 @@
       <div>
         <p>Written by: <%= author_name(@post) %></p>
         <p>Tags: <%=  render_tags(@post.tags) %></p>
-        <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
+        <p>Published at: <%= Date.to_string(@post.inserted_at) %></p>
         <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
       </div>
-      <hr />
+      <hr class="m-0" />
       <div>
         <%= raw(safe_html(@rendered_markdown)) %>
       </div>
@@ -56,7 +56,7 @@
         }
       }" class="flex flex-col">
       <div class="content-start w-96">
-         <h1 class="text-3xl font-bold mb-2">
+         <h1 class="text-2xl font-bold mb-2">
            Comments
          </h1>
 
@@ -94,10 +94,10 @@
           </template>
 
           <%# TODO: show creation date %>
-          <%= for commentary <- @comments do %>
+          <%= for comment <- @comments do %>
             <div class="my-2">
-              <h2 class="text-xl">Author: <%= author_name(commentary) %></h2>
-              <p><%= commentary.body %></p>
+              <h2 class="text-xl">Author: <%= author_name(comment) %></h2>
+              <p><%= comment.body %></p>
             </div>
           <% end %>
         </div>

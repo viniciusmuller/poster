@@ -6,6 +6,8 @@ defmodule PosterWeb.PostController do
 
   action_fallback(PosterWeb.FallbackController)
 
+  @topic "posts"
+
   alias Poster.Posts
   alias Poster.Markdown
   alias Poster.Blog
@@ -54,6 +56,7 @@ defmodule PosterWeb.PostController do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post created successfully.")
+        |> tap(fn _ -> PosterWeb.Endpoint.broadcast_from!(self(), @topic, "new_post", post) end)
         |> redirect(to: Routes.post_path(conn, :show, post.slug))
 
       {:error, %Ecto.Changeset{} = changeset} ->

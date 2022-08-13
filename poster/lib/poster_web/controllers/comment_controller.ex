@@ -20,7 +20,7 @@ defmodule PosterWeb.CommentController do
 
     with {:ok, post_id} <- Map.fetch(comment_params, "post_id"),
          post <- Posts.get_post!(post_id),
-         {:ok, comment} <- create_post_with_author(comment_params, post, current_user) do
+         {:ok, comment} <- create_comment_with_author(comment_params, post, current_user) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.comment_path(conn, :show, comment))
@@ -31,7 +31,7 @@ defmodule PosterWeb.CommentController do
     end
   end
 
-  defp create_post_with_author(attrs, post, current_user) do
+  defp create_comment_with_author(attrs, post, current_user) do
     case current_user do
       # anonymous user
       nil ->

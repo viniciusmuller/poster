@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content={csrf_token_value()}>
+    <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "Poster", suffix: " · Phoenix Framework" %>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
@@ -16,7 +17,7 @@
     <nav class="flex items-center justify-between flex-wrap bg-gray-800 p-6 fixed w-full z-10 top-0">
       <div class="flex items-center flex-shrink-0 text-white mr-6">
         <a class="text-white no-underline hover:text-white hover:no-underline" href="#">
-          <a href="/" class="text-2xl pl-2"><i class="em em-grinning"></i>Poster</a>
+          <%= live_redirect "Poster", to: "/posts", class: "text-2xl pl-2" %>
         </a>
       </div>
 

@@ -22,6 +22,10 @@ defmodule PosterWeb.PostView do
     end
   end
 
+  def format_post_date(datetime) do
+    Timex.format!(datetime, "%Y-%m-%d %H:%M", :strftime)
+  end
+
   def pagination_button_classes(current_page, target) do
     non_selected =
       "flex items-center justify-center w-10 h-10 text-blue-600 transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-blue-100"

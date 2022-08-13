@@ -22,13 +22,15 @@
         <% end %>
       </h2>
 
+      <h2 class="text-xl">
+        <%= relative_post_date(post.inserted_at) %>
+      </h2>
+
       <%= if length(post.tags) > 0 do %>
         <h2 class="text-xl">Tags: <%= render_tags(post.tags) %></h2>
       <% end %>
 
       <h2 class="text-xl"><%= render_comments_number(post.comments) %></h2>
-
-      <p><%= post.body %></p>
     </div>
   </div>
 <% end %>

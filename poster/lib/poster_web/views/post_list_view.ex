@@ -10,6 +10,10 @@ defmodule PosterWeb.PostListView do
     end
   end
 
+  def relative_post_date(time) do
+    Timex.format!(time, "{relative}", :relative)
+  end
+
   def render_tags(tags) do
     for(tag <- tags, do: tag.title) |> Enum.join(", ")
   end

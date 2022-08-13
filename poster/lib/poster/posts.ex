@@ -46,7 +46,8 @@ defmodule Poster.Posts do
     end
   end
 
-  def sort_posts(query, _invalid), do: query
+  def sort_posts(query, _invalid),
+    do: query |> distinct([p], true) |> order_by([p], desc: p.inserted_at)
 
   defp get_sorting_mode(%{"mode" => "Ascending"}), do: :asc
   defp get_sorting_mode(%{"mode" => "Descending"}), do: :desc

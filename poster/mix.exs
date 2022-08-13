@@ -55,7 +55,8 @@ defmodule Poster.MixProject do
       {:earmark, "~> 1.4"},
       {:phoenix_html_sanitizer, "~> 1.1"},
       {:slugify, "~> 1.3"},
-      {:scrivener_ecto, "~> 2.0"}
+      {:scrivener_ecto, "~> 2.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 

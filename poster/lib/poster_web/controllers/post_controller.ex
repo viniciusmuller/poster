@@ -11,8 +11,9 @@ defmodule PosterWeb.PostController do
   alias Poster.Blog
   alias Poster.Posts.Post
 
-  def index(conn, _params) do
-    posts = Posts.list_posts([:comments, :author, :tags])
+  def index(conn, params) do
+    search_term = get_in(params, ["query"])
+    posts = Posts.list_posts(search_term, [:comments, :author, :tags])
     render(conn, "index.html", posts: posts)
   end
 

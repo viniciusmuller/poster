@@ -3,6 +3,7 @@ defmodule Poster.Posts.Post do
 
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, only: [from: 2]
 
   alias Poster.Markdown
   alias Poster.Tags.Tag
@@ -49,6 +50,20 @@ defmodule Poster.Posts.Post do
     |> validate_length(:title, min: 1, max: 80)
     |> find_cover()
     |> product_tags()
+  end
+
+  def search(query, nil), do: query
+
+  def search(query, search_term) do
+    wildcard_search = "%#{search_term}%"
+
+    from post in query,
+      join: t in assoc(post, :tags),
+      where:
+        ilike(post.title, ^wildcard_search) or
+          ilike(post.body, ^wildcard_search) or
+          ilike(t.title, ^wildcard_search),
+      preload: [tags: t]
   end
 
   def add_raw_tags(changeset, post) do

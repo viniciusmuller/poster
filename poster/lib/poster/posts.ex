@@ -18,8 +18,11 @@ defmodule Poster.Posts do
       [%Post{}, ...]
 
   """
-  def list_posts(preloads \\ []) do
-    Repo.all(Post) |> Repo.preload(preloads)
+  def list_posts(search_term \\ nil, preloads \\ []) do
+    Post
+    |> Post.search(search_term)
+    |> Repo.all()
+    |> Repo.preload(preloads)
   end
 
   @doc """

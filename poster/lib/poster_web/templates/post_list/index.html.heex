@@ -1,5 +1,5 @@
 <%= for post <- assigns.posts do %>
-  <div class="flex border-2 border-gray-200 rounded mb-2 p-2">
+  <div class="flex bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <%= if not is_nil(post.thumbnail_url) do %>
         <div>
           <img

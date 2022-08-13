@@ -38,7 +38,7 @@ defmodule PosterWeb.PostControllerTest do
     test "paginates posts", %{conn: conn} do
       conn = get(conn, Routes.post_path(conn, :index))
       assert html_response(conn, 200) =~ "Total results"
-      assert html_response(conn, 200) =~ "Page 1 of"
+      assert html_response(conn, 200) =~ ~s(id="pagination-navigation")
     end
   end
 

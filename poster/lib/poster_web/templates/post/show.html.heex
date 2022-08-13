@@ -14,9 +14,13 @@
         <% end %>
       </div>
 
-      <p>Written by: <%= author_name(@post) %></p>
-      <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
-      <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
+      <div>
+        <p>Written by: <%= author_name(@post) %></p>
+        <p>Tags: <%=  render_tags(@post.tags) %></p>
+        <p>Creation date: <%= Date.to_string(@post.inserted_at) %></p>
+        <p>Last update: <%= Date.to_string(@post.updated_at) %></p>
+      </div>
+      <hr />
       <div>
         <%= raw(safe_html(@rendered_markdown)) %>
       </div>

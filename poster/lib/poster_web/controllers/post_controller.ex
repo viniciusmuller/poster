@@ -55,7 +55,7 @@ defmodule PosterWeb.PostController do
   end
 
   def show(conn, %{"slug" => slug} = params) do
-    post = Posts.get_post_by_slug!(slug, [:author])
+    post = Posts.get_post_by_slug!(slug, [:author, :tags])
 
     comments_page =
       Posts.post_comments(post)

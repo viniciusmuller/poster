@@ -30,13 +30,14 @@
       </li>
 
       <li>
-        <%= live_patch type: "button", to: Routes.author_show_path(@socket, :show, @author, page: 1), class: pagination_button_classes(@page.page_number, 1) do %>
+        <%= live_patch type: "button", to: Routes.author_show_path(@socket, :show, @author, page: 1),
+            class: SharedView.pagination_button_classes(@page.page_number, 1) do %>
           1
         <% end %>
       </li>
 
       <%= if @page.page_number > 1 and @page.page_number < @page.total_pages do %>
-        <%= content_tag :p, class: pagination_button_classes(@page.page_number, @page.page_number) do %>
+        <%= content_tag :p, class: SharedView.pagination_button_classes(@page.page_number, @page.page_number) do %>
           <%= @page.page_number %>
         <% end %>
       <% end %>
@@ -44,7 +45,7 @@
       <%= if @page.total_pages > 1 do %>
         <li>
           <%= live_patch type: "button", to: Routes.author_show_path(@socket, :show, @author, page: @page.total_pages),
-              class: pagination_button_classes(@page.page_number, @page.total_pages) do %>
+              class: SharedView.pagination_button_classes(@page.page_number, @page.total_pages) do %>
             <%= @page.total_pages %>
           <% end %>
         </li>

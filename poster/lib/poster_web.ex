@@ -100,6 +100,7 @@ defmodule PosterWeb do
       import PosterWeb.ErrorHelpers
       import PosterWeb.Gettext
       alias PosterWeb.Router.Helpers, as: Routes
+      alias PosterWeb.SharedView
     end
   end
 

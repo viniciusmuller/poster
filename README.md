@@ -33,7 +33,7 @@ comments being automatically shown to all users that are eligible to see them.
 ## Observability
 
 By using [PromEx](https://github.com/akoutmos/prom_ex), the systems enable
-prometheus support in the `/metrics` endpoints and integrates with Grafana to
+prometheus support in the `/metrics` endpoint and integrates with Grafana to
 provide observability to the system administrators:
 
 ![grafana beam vm dashboard](./.github/img/grafana_beam_dashboard.png)

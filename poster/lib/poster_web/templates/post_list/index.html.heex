@@ -18,7 +18,9 @@
             <%= if is_nil(post.author) do %>
               Author: Anonymous
             <% else %>
-              Author: <%= live_redirect author_name(post), to: Routes.author_show_path(assigns.conn, :show, post.author), class: "text-blue-700 hover:underline" %>
+              Author: <%= live_redirect SharedView.author_name(post),
+                to: Routes.author_show_path(assigns.conn, :show, post.author),
+                class: "text-blue-700 hover:underline" %>
             <% end %>
           <% end %>
         </h2>
@@ -28,7 +30,7 @@
         </h2>
 
         <%= if length(post.tags) > 0 do %>
-          <h2 class="text-xl">Tags: <%= render_tags(post.tags) %></h2>
+          <h2 class="text-xl">Tags: <%= SharedView.render_tags(post.tags) %></h2>
         <% end %>
 
         <h2 class="text-xl"><%= render_comments_number(post.comments) %></h2>

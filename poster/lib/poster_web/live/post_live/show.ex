@@ -94,30 +94,12 @@ defmodule PosterWeb.PostLive.Show do
     sanitized
   end
 
-  defp author_name(%Post{} = post) do
-    case post.author_id do
-      nil -> "Anonymous"
-      _ -> post.author.name
-    end
-  end
-
-  defp author_name(%Comment{} = comment) do
-    case comment.author_id do
-      nil -> "Anonymous"
-      _ -> comment.author.name
-    end
-  end
-
   defp format_post_date(datetime) do
     Timex.format!(datetime, "%Y-%m-%d %H:%M", :strftime)
   end
 
   defp is_owner?(author, post) do
     post.author_id == author.id
-  end
-
-  defp render_tags(tags) do
-    for(tag <- tags, do: tag.title) |> Enum.join(", ")
   end
 
   defp relative_comment_date(time) do

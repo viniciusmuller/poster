@@ -24,13 +24,8 @@ defmodule PosterWeb.Router do
 
     live "/author/:id", AuthorLive.Show, :show
     live "/", PostLive.Index, :index
-    live "/:slug", PostLive.Show, :show
+    live "/p/:slug", PostLive.Show, :show
     resources "/posts", PostController, param: "slug", except: [:show, :index]
-  end
-
-  scope "/api", PosterWeb do
-    pipe_through :api
-    resources "/comments", CommentController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

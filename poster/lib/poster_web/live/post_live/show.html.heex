@@ -16,11 +16,13 @@
 
       <div>
         <%= if @post.author != nil do %>
-          <p>Written by: <%= live_redirect author_name(@post), to: Routes.author_show_path(@socket, :show, @post.author), class: "no-underline text-blue-700 hover:underline" %></p>
+          <p>Written by: <%= live_redirect SharedView.author_name(@post),
+            to: Routes.author_show_path(@socket, :show, @post.author),
+            class: "no-underline text-blue-700 hover:underline" %></p>
         <% else %>
           <p>Written by: Anonymous</p>
         <% end %>
-        <p>Tags: <%=  render_tags(@post.tags) %></p>
+        <p>Tags: <%=  SharedView.render_tags(@post.tags) %></p>
         <p>Published at: <%= format_post_date(@post.inserted_at) %></p>
 
         <%= if @post.updated_at > @post.inserted_at do %>
@@ -81,7 +83,7 @@
            </nav>
          <% end %>
 
-        <.form let={f} for={@changeset} phx-change="validate" phx-submit="save">
+        <.form let={f} id="comment-form" for={@changeset} phx-change="validate" phx-submit="save">
             <%= textarea f, :body, maxlength: 240, placeholder: "Write a commentary...", cols: 40,
               class: "h-32 text-sm text-gray-900 border-gray-300 rounded-lg border focus:ring-blue-500 focus:border-blue-500" %>
             <%= error_tag f, :body %>
@@ -92,7 +94,7 @@
         <div id="comments" class="content-start">
           <%= for comment <- @comments do %>
             <div class="my-2">
-              <h2 class="text-xl">Author: <%= author_name(comment) %></h2>
+              <h2 class="text-xl">Author: <%= SharedView.author_name(comment) %></h2>
               <p><%= relative_comment_date(comment.inserted_at) %></p>
               <p><%= comment.body %></p>
             </div>

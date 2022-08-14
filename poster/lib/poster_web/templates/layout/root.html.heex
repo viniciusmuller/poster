@@ -11,36 +11,39 @@
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.10/purify.min.js"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js"></script>
   </head>
   <body>
-    <nav class="flex items-center justify-between flex-wrap bg-gray-800 p-6 fixed w-full z-10 top-0">
+    <nav class="flex items-center justify-between flex-wrap bg-gray-800 p-6 fixed w-full z-10 top-0"
+         x-data="{ isOpen: false }"
+      >
       <div class="flex items-center flex-shrink-0 text-white mr-6">
-        <a class="text-white no-underline hover:text-white hover:no-underline" href="#">
+        <span
+          @click="isOpen = false"
+        >
           <%= live_redirect "Poster", to: "/", class: "text-2xl pl-2" %>
-        </a>
+        </span>
       </div>
 
       <div class="block lg:hidden">
-        <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-white hover:border-white">
+        <button
+          @click="isOpen = !isOpen"
+          id="nav-toggle"
+          class="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-white hover:border-white"
+        >
           <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
         </button>
       </div>
 
-      <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+      <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content"
+           :class="{ 'block shadow-3xl': isOpen, 'hidden': !isOpen }"
+        >
         <%= render "_user_menu.html", assigns %>
       </div>
     </nav>
 
     <!--Container-->
     <div class="shadow-lg mx-auto bg-white mt-24 md:mt-18"></div>
-
-    <script>
-      //Javascript to toggle the menu
-      document.getElementById('nav-toggle').onclick = function(){
-        document.getElementById("nav-content").classList.toggle("hidden");
-      }
-    </script>
 
     <div class="p-4">
       <%= @inner_content %>

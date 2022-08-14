@@ -10,7 +10,16 @@ defmodule Poster.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [
+        ignore_modules: [
+          Poster.PostTag,
+          Poster.PromEx,
+          Poster.Release,
+          PosterWeb,
+          PosterWeb.LiveHelpers
+        ]
+      ]
     ]
   end
 
@@ -57,7 +66,8 @@ defmodule Poster.MixProject do
       {:slugify, "~> 1.3"},
       {:scrivener_ecto, "~> 2.0"},
       {:timex, "~> 3.0"},
-      {:prom_ex, "~> 1.7.1"}
+      {:prom_ex, "~> 1.7.1"},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 

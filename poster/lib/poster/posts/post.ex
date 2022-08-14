@@ -52,7 +52,6 @@ defmodule Poster.Posts.Post do
     |> product_tags()
   end
 
-
   @doc """
   Search posts and their tags for a given term.
 
@@ -85,7 +84,7 @@ defmodule Poster.Posts.Post do
   defp product_tags(%Ecto.Changeset{valid?: true, changes: %{tags_raw: tags}} = changeset) do
     tags = tags |> parse_tags() |> Enum.uniq_by(& &1.title)
 
-    if is_list(tags) and length(tags) >= 2 do
+    if length(tags) >= 2 do
       tag_names = for t <- tags, do: t.title
       tags = Enum.map(tag_names, &get_or_insert_tag/1)
       Ecto.Changeset.put_assoc(changeset, :tags, tags)

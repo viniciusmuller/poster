@@ -255,6 +255,7 @@ defmodule Poster.Posts do
       {:error, %Ecto.Changeset{}}
 
   """
+  # credo:disable-for-next-line
   def create_comment_with_author(attrs \\ %{}, %Post{} = post, author = %Author{}) do
     %Comment{}
     |> Comment.changeset(attrs)

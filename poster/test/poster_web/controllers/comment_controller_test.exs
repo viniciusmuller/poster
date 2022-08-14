@@ -132,7 +132,7 @@ defmodule PosterWeb.CommentControllerTest do
 
     test "fails to delete comment when unauthenticated", %{
       conn: conn,
-      comment: comment,
+      comment: comment
     } do
       conn = put(conn, Routes.comment_path(conn, :update, comment))
       assert conn.status == 401

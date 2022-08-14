@@ -185,11 +185,11 @@ defmodule Poster.PostsTest do
 
   #     refute is_sorted?(query_results, & &1.updated_at)
   #   end
-      # defp is_sorted?(enum, by) do
-      #   enum |> Enum.sort_by(by) |> only_ids() == only_ids(enum)
-      # end
+  # defp is_sorted?(enum, by) do
+  #   enum |> Enum.sort_by(by) |> only_ids() == only_ids(enum)
+  # end
 
-      # defp only_ids(enum), do: Enum.map(enum, & &1.id)
+  # defp only_ids(enum), do: Enum.map(enum, & &1.id)
   # end
 
   describe "comments" do

@@ -63,10 +63,12 @@ defmodule PosterWeb.PostLive.Show do
     case comment do
       {:ok, comment} ->
         PosterWeb.Endpoint.broadcast_from!(self(), @topic, "new_comment" <> comment.id, comment)
-        {:noreply, assign(socket,
-          comments: [comment | socket.assigns.comments],
-          changeset: Posts.change_comment(%Comment{})
-        )}
+
+        {:noreply,
+         assign(socket,
+           comments: [comment | socket.assigns.comments],
+           changeset: Posts.change_comment(%Comment{})
+         )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -76,6 +78,7 @@ defmodule PosterWeb.PostLive.Show do
   @impl true
   def handle_info(%{topic: @topic, payload: comment}, socket) do
     comment = Poster.Repo.preload(comment, :author)
+
     comments =
       if socket.assigns.page.page_number < 2 do
         [comment | socket.assigns.comments]

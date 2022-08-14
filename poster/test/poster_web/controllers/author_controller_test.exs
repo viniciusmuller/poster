@@ -10,19 +10,19 @@ defmodule PosterWeb.AuthorControllerTest do
     setup [:create_post_with_author]
 
     test "lists all posts from a given author", %{conn: conn, author: author} do
-      conn = get(conn, Routes.author_path(conn, :show, author))
+      conn = get(conn, Routes.author_show_path(conn, :show, author))
       assert html_response(conn, 200) =~ "1 post"
 
       add_post_to_author(author)
 
-      conn = get(conn, Routes.author_path(conn, :show, author))
+      conn = get(conn, Routes.author_show_path(conn, :show, author))
       assert html_response(conn, 200) =~ "2 posts"
     end
 
     test "does not list posts that are not from the author", %{conn: conn, author: author} do
       for _ <- 1..10, do: post_fixture()
 
-      conn = get(conn, Routes.author_path(conn, :show, author))
+      conn = get(conn, Routes.author_show_path(conn, :show, author))
       assert html_response(conn, 200) =~ "1 post"
     end
 
@@ -31,11 +31,11 @@ defmodule PosterWeb.AuthorControllerTest do
       for _ <- 1..100, do: %Post{author_id: ^author_id} = add_post_to_author(author)
 
       assert conn
-             |> get(Routes.author_path(conn, :show, author, page: 1))
+             |> get(Routes.author_show_path(conn, :show, author, %{page: 1}))
              |> html_response(200) =~ ~s(id="pagination-navigation")
 
       assert conn
-             |> get(Routes.author_path(conn, :show, author, page: 2))
+             |> get(Routes.author_show_path(conn, :show, author, %{page: 2}))
              |> html_response(200) =~ ~s(id="pagination-navigation")
     end
 
@@ -44,7 +44,7 @@ defmodule PosterWeb.AuthorControllerTest do
       for _ <- 1..10, do: %Post{author_id: ^author_id} = add_post_to_author(author)
 
       refute conn
-             |> get(Routes.author_path(conn, :show, author, page: 1))
+             |> get(Routes.author_show_path(conn, :show, author, page: 1))
              |> html_response(200) =~ "Author: #{author.name}"
     end
   end

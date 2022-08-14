@@ -45,7 +45,8 @@ defmodule Poster.Blog do
     from p in Post,
       join: a in assoc(p, :author),
       on: p.author_id == ^author.id,
-      preload: [:tags, :comments, :author]
+      preload: [:tags, :comments, :author],
+      order_by: [desc: :inserted_at]
   end
 
   @doc """

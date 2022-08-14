@@ -1,5 +1,5 @@
 defmodule Poster.TagsTest do
-  use Poster.DataCase
+  use Poster.DataCase, async: true
 
   alias Poster.Tags
 

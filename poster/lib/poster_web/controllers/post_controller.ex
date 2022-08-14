@@ -9,32 +9,8 @@ defmodule PosterWeb.PostController do
   @topic "posts"
 
   alias Poster.Posts
-  alias Poster.Markdown
   alias Poster.Blog
   alias Poster.Posts.Post
-
-  def index(conn, params) do
-    search_term =
-      with query <- get_in(params, ["query"]),
-           true <- query != "" do
-        query
-      else
-        _ -> nil
-      end
-
-    page =
-      search_term
-      |> Posts.list_posts()
-      |> Posts.sort_posts(params)
-      |> Poster.Repo.paginate(params)
-
-    posts = Poster.Repo.preload(page.entries, [:author, :tags, :comments])
-
-    render(conn, "index.html",
-      posts: posts,
-      page: page
-    )
-  end
 
   def new(conn, _params) do
     changeset = Posts.change_post(%Post{tags: []})
@@ -57,27 +33,11 @@ defmodule PosterWeb.PostController do
         conn
         |> put_flash(:info, "Post created successfully.")
         |> tap(fn _ -> PosterWeb.Endpoint.broadcast_from!(self(), @topic, "new_post", post) end)
-        |> redirect(to: Routes.post_path(conn, :show, post.slug))
+        |> redirect(to: Routes.post_show_path(conn, :show, post.slug))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
-  end
-
-  def show(conn, %{"slug" => slug} = params) do
-    post = Posts.get_post_by_slug!(slug, [:author, :tags])
-
-    comments_page =
-      Posts.post_comments(post)
-      |> Poster.Repo.paginate(params)
-
-    comments = Poster.Repo.preload(comments_page.entries, :author)
-
-    html_doc = Markdown.to_html!(post.body)
-
-    conn
-    |> assign(:rendered_markdown, html_doc)
-    |> render("show.html", post: post, comments_page: comments_page, comments: comments)
   end
 
   def edit(conn, %{"slug" => slug}) do
@@ -97,7 +57,7 @@ defmodule PosterWeb.PostController do
         {:ok, post} ->
           conn
           |> put_flash(:info, "Post updated successfully.")
-          |> redirect(to: Routes.post_path(conn, :show, post.slug))
+          |> redirect(to: Routes.post_show_path(conn, :show, post.slug))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", post: post, changeset: changeset)
@@ -113,7 +73,7 @@ defmodule PosterWeb.PostController do
 
       conn
       |> put_flash(:info, "Post deleted successfully.")
-      |> redirect(to: Routes.post_path(conn, :index))
+      |> redirect(to: Routes.post_index_path(conn, :index))
     end
   end
 

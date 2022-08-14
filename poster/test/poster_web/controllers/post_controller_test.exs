@@ -31,20 +31,20 @@ defmodule PosterWeb.PostControllerTest do
 
   describe "index" do
     test "lists all posts", %{conn: conn} do
-      conn = get(conn, Routes.post_path(conn, :index))
+      conn = get(conn, Routes.post_index_path(conn, :index))
       assert html_response(conn, 200) =~ "Recent Posts"
     end
 
     test "paginates posts", %{conn: conn} do
       for _ <- 1..20, do: post_fixture()
 
-      conn = get(conn, Routes.post_path(conn, :index))
+      conn = get(conn, Routes.post_index_path(conn, :index))
       assert html_response(conn, 200) =~ "Total results"
       assert html_response(conn, 200) =~ ~s(id="pagination-navigation")
     end
 
     test "does not show pagination when too few posts", %{conn: conn} do
-      conn = get(conn, Routes.post_path(conn, :index))
+      conn = get(conn, Routes.post_index_path(conn, :index))
       assert html_response(conn, 200) =~ "Total results"
       refute html_response(conn, 200) =~ ~s(id="pagination-navigation")
     end
@@ -54,7 +54,7 @@ defmodule PosterWeb.PostControllerTest do
     setup [:create_post_with_author]
 
     test "renders specific posts", %{conn: conn, post: post} do
-      conn = get(conn, Routes.post_path(conn, :show, post.slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, post.slug))
       assert html_response(conn, 200) =~ post.title
     end
 
@@ -62,11 +62,11 @@ defmodule PosterWeb.PostControllerTest do
       for _ <- 1..100, do: {:ok, _comment} = add_comment_to_post(post)
 
       assert conn
-             |> get(Routes.post_path(conn, :show, post.slug, page: 1))
+             |> get(Routes.post_show_path(conn, :show, post.slug, page: 1))
              |> html_response(200) =~ ~s(id="pagination-navigation")
 
       assert conn
-             |> get(Routes.post_path(conn, :show, post.slug, page: 2))
+             |> get(Routes.post_show_path(conn, :show, post.slug, page: 2))
              |> html_response(200) =~ ~s(id="pagination-navigation")
     end
   end
@@ -83,9 +83,9 @@ defmodule PosterWeb.PostControllerTest do
       conn = post(conn, Routes.post_path(conn, :create), post: @create_attrs)
 
       assert %{slug: slug} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, slug)
+      assert redirected_to(conn) == Routes.post_show_path(conn, :show, slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, slug))
       assert html_response(conn, 200) =~ @create_attrs.title
     end
 
@@ -98,9 +98,9 @@ defmodule PosterWeb.PostControllerTest do
         )
 
       assert %{slug: slug} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, slug)
+      assert redirected_to(conn) == Routes.post_show_path(conn, :show, slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, slug))
       refute html_response(conn, 200) =~ malicious_payload
     end
 
@@ -116,9 +116,9 @@ defmodule PosterWeb.PostControllerTest do
     test "can create posts when authenticated", %{conn: conn, user: user} do
       conn = post(conn, Routes.post_path(conn, :create), post: @create_attrs)
       assert %{slug: slug} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, slug)
+      assert redirected_to(conn) == Routes.post_show_path(conn, :show, slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, slug))
       assert html_response(conn, 200) =~ @create_attrs.title
       assert html_response(conn, 200) =~ user.author.name
     end
@@ -156,7 +156,7 @@ defmodule PosterWeb.PostControllerTest do
       post: post
     } do
       response = get(conn, Routes.post_path(conn, :edit, post.slug))
-      assert redirected_to(response) == Routes.post_path(conn, :index)
+      assert redirected_to(response) == Routes.post_index_path(conn, :index)
     end
   end
 
@@ -165,9 +165,9 @@ defmodule PosterWeb.PostControllerTest do
 
     test "redirects to post when data is valid", %{conn: conn, post: post} do
       conn = put(conn, Routes.post_path(conn, :update, post.slug), post: @update_attrs)
-      assert redirected_to(conn) == Routes.post_path(conn, :show, post.slug)
+      assert redirected_to(conn) == Routes.post_show_path(conn, :show, post.slug)
 
-      conn = get(conn, Routes.post_path(conn, :show, post.slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, post.slug))
       assert html_response(conn, 200) =~ "some updated body"
     end
 
@@ -192,7 +192,7 @@ defmodule PosterWeb.PostControllerTest do
 
     test "redirect to / when unauthorized", %{conn: conn, post: post} do
       conn = put(conn, Routes.post_path(conn, :update, post.slug), post: @update_attrs)
-      assert redirected_to(conn) == Routes.post_path(conn, :index)
+      assert redirected_to(conn) == Routes.post_index_path(conn, :index)
     end
   end
 
@@ -202,7 +202,7 @@ defmodule PosterWeb.PostControllerTest do
     test "redirects to login if unauthenticated", %{conn: conn, post: post} do
       conn = delete(conn, Routes.post_path(conn, :delete, post.slug))
       assert redirected_to(conn) == Routes.user_session_path(conn, :new)
-      conn = get(conn, Routes.post_path(conn, :show, post.slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, post.slug))
       assert html_response(conn, 200) =~ post.title
     end
   end
@@ -212,10 +212,10 @@ defmodule PosterWeb.PostControllerTest do
 
     test "deletes chosen post when authenticated", %{conn: conn, post: post} do
       conn = delete(conn, Routes.post_path(conn, :delete, post.slug))
-      assert redirected_to(conn) == Routes.post_path(conn, :index)
+      assert redirected_to(conn) == Routes.post_index_path(conn, :index)
 
       assert_error_sent 404, fn ->
-        get(conn, Routes.post_path(conn, :show, post.slug))
+        get(conn, Routes.post_show_path(conn, :show, post.slug))
       end
     end
   end
@@ -225,9 +225,9 @@ defmodule PosterWeb.PostControllerTest do
 
     test "redirects to index if unauthorized", %{conn: conn, post: post} do
       conn = delete(conn, Routes.post_path(conn, :delete, post.slug))
-      assert redirected_to(conn) == Routes.post_path(conn, :index)
+      assert redirected_to(conn) == Routes.post_index_path(conn, :index)
 
-      conn = get(conn, Routes.post_path(conn, :show, post.slug))
+      conn = get(conn, Routes.post_show_path(conn, :show, post.slug))
       assert html_response(conn, 200) =~ post.title
     end
   end

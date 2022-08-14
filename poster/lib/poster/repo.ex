@@ -7,12 +7,16 @@ defmodule Poster.Repo do
 
   def init(_, config) do
     config =
-      config
-      |> Keyword.put(:username, System.get_env("PGUSER") || "postgres")
-      |> Keyword.put(:password, System.get_env("PGPASSWORD") || "postgres")
-      |> Keyword.put(:database, System.get_env("PGDATABASE") || "hello_dev")
-      |> Keyword.put(:hostname, System.get_env("PGHOST") || "127.0.0.1")
-      |> Keyword.put(:port, get_port())
+      if Mix.env() != :test do
+        config
+        |> Keyword.put(:username, System.get_env("PGUSER") || "postgres")
+        |> Keyword.put(:password, System.get_env("PGPASSWORD") || "postgres")
+        |> Keyword.put(:database, System.get_env("PGDATABASE") || "poster_dev")
+        |> Keyword.put(:hostname, System.get_env("PGHOST") || "127.0.0.1")
+        |> Keyword.put(:port, get_port())
+      else
+        config
+      end
 
     {:ok, config}
   end

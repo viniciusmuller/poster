@@ -31,7 +31,7 @@ defmodule PosterWeb.PostLive.Show do
 
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:page_title, post.title)
      |> assign(:post, post)
      |> assign(:comments, comments)
      |> assign(:page, comments_page)
@@ -80,9 +80,6 @@ defmodule PosterWeb.PostLive.Show do
 
     {:noreply, assign(socket, :comments, comments)}
   end
-
-  defp page_title(:show), do: "Show Post"
-  defp page_title(:edit), do: "Edit Post"
 
   defp safe_html(html_body) do
     {:safe, sanitized} = sanitize(html_body)

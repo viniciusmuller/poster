@@ -79,7 +79,7 @@ defmodule Poster.Posts.Post do
   end
 
   defp tags_to_string(tags) do
-    tags |> Enum.map(& &1.title) |> Enum.join(", ")
+    Enum.map_join(tags, ", ", & &1.title)
   end
 
   defp product_tags(%Ecto.Changeset{valid?: true, changes: %{tags_raw: tags}} = changeset) do

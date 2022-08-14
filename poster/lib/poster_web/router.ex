@@ -22,14 +22,10 @@ defmodule PosterWeb.Router do
   scope "/", PosterWeb do
     pipe_through :browser
 
-    live "/posts", PostLive.Index, :index
-    live "/posts/new", PostLive.Index, :new
-    live "/posts/:slug/edit", PostLive.Index, :edit
-
-    live "/posts/:slug", PostLive.Show, :show
-    live "/posts/:slug/show/edit", PostLive.Show, :edit
     get "/author/:id", AuthorController, :show
-    resources "/", PostController, param: "slug"
+    live "/", PostLive.Index, :index
+    live "/:slug", PostLive.Show, :show
+    resources "/posts", PostController, param: "slug", except: [:show, :index]
   end
 
   scope "/api", PosterWeb do

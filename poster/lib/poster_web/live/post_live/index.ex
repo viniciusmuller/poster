@@ -45,7 +45,6 @@ defmodule PosterWeb.PostLive.Index do
   end
 
   defp list_posts(params) do
-    IO.inspect(params)
     search_term =
       with query <- get_in(params, ["query"]),
            true <- query != "" do

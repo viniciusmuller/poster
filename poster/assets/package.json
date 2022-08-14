@@ -1,0 +1,6 @@
+{
+  "name": "assets",
+  "dependencies": {
+    "@formkit/auto-animate": "*"
+  }
+}

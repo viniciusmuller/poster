@@ -31,3 +31,11 @@ mix setup
 ```sh
 iex -S mix phx.server
 ```
+
+## Running with Docker
+```
+docker run \
+  --env DATABASE_URL=ecto://postgres:postgres@127.0.0.1/poster \
+  --env SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+  poster
+```

@@ -14,6 +14,9 @@ config :poster, PosterWeb.Endpoint, cache_static_manifest: "priv/static/cache_ma
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :poster, PosterWeb.Endpoint,
+  check_origin: false
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

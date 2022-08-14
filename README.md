@@ -35,7 +35,13 @@ iex -S mix phx.server
 ## Running with Docker
 ```
 docker run \
-  --env DATABASE_URL=ecto://postgres:postgres@127.0.0.1/poster \
-  --env SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+  --env DATABASE_URL=ecto://user:pass@host/database \
+  --env PGDATABASE=poster \
+  --env PGPORT=5432 \
+  --env PGHOST=pg_host \
+  --env PGUSER=postgres \
+  --env PGPASSWORD=pg_pass \
+  --env DATABASE_URL=ecto://user:pass@host/database \
+  --env SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   poster
 ```

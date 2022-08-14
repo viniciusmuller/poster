@@ -7,6 +7,17 @@
 # General application configuration
 import Config
 
+defmodule Helpers do
+  def get_grafana_config() do
+    [
+      host: "http://grafana:3000",
+      username: "admin",
+      password: "admin",
+      upload_dashboards_on_start: Mix.env() == :prod
+    ]
+  end
+end
+
 config :poster,
   ecto_repos: [Poster.Repo],
   generators: [binary_id: true]
@@ -29,6 +40,13 @@ config :poster, Poster.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
+
+config :poster, Poster.PromEx,
+  disabled: false,
+  manual_metrics_start_delay: :no_delay,
+  drop_metrics_groups: [],
+  grafana: Helpers.get_grafana_config(),
+  metrics_server: :disabled
 
 # Configure esbuild (the version is required)
 config :esbuild,

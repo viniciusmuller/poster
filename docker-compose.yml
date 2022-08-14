@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+
+  app:
+    build: ./poster
+    environment:
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=poster_dev
+      - PGHOST=db
+      - PGPORT=5432
+      - DATABASE_URL=ecto://postgres:postgres@db/poster
+      - SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    depends_on:
+      - "db"
+      - "grafana"
+    ports:
+      - 4000:4000
+
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    # For the sake of a smoother project running experience, prometheus will run
+    # as root to avoid permission errors. This is not recommended and the
+    # approach would be to use sudo and chown to change the prometheus-data
+    # permissions on the host side.
+    user: root
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./prometheus-data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana-oss:8.2.0
+    volumes:
+      - ./grafana-data:/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+    ports:
+      - 3000:3000
+    depends_on:
+      - "prometheus"
+
+    user: '104'

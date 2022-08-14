@@ -8,6 +8,7 @@ defmodule Poster.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      Poster.PromEx,
       # Start the Ecto repository
       Poster.Repo,
       # Start the Telemetry supervisor

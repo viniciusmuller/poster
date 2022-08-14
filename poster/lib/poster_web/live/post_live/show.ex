@@ -60,7 +60,7 @@ defmodule PosterWeb.PostLive.Show do
 
     case comment do
       {:ok, comment} ->
-        PosterWeb.Endpoint.broadcast_from!(self(), @topic, "new_comment" <> post.id, comment)
+        PosterWeb.Endpoint.broadcast_from!(self(), @topic, "new_comment" <> comment.id, comment)
         {:noreply, assign(socket, :comments, [comment | socket.assigns.comments])}
 
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -22,7 +22,8 @@ defmodule PosterWeb.Router do
   scope "/", PosterWeb do
     pipe_through :browser
 
-    get "/author/:id", AuthorController, :show
+    # get "/author/:id", AuthorController, :show
+    live "/author/:id", AuthorLive.Show, :show
     live "/", PostLive.Index, :index
     live "/:slug", PostLive.Show, :show
     resources "/posts", PostController, param: "slug", except: [:show, :index]

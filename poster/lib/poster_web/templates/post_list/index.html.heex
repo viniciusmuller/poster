@@ -18,7 +18,7 @@
             <%= if is_nil(post.author) do %>
               Author: Anonymous
             <% else %>
-              Author: <%= link author_name(post), to: Routes.author_path(assigns.conn, :show, post.author), class: "text-blue-700 hover:underline" %>
+              Author: <%= live_redirect author_name(post), to: Routes.author_show_path(assigns.conn, :show, post.author), class: "text-blue-700 hover:underline" %>
             <% end %>
           <% end %>
         </h2>

@@ -16,7 +16,7 @@
 
       <div>
         <%= if @post.author != nil do %>
-          <p>Written by: <%= link author_name(@post), to: Routes.author_path(@socket, :show, @post.author), class: "no-underline text-blue-700 hover:underline" %></p>
+          <p>Written by: <%= live_redirect author_name(@post), to: Routes.author_show_path(@socket, :show, @post.author), class: "no-underline text-blue-700 hover:underline" %></p>
         <% else %>
           <p>Written by: Anonymous</p>
         <% end %>

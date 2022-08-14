@@ -3,5 +3,3 @@
 </h1>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :create)) %>
-
-<span class="mt-2"><%= link "Back", to: Routes.post_index_path(@conn, :index), class: "p-4" %></span>

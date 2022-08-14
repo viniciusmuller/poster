@@ -18,6 +18,7 @@
             elixir_ls
             inotify-tools
             docker-compose
+            nodejs
 
             rnix-lsp
           ];

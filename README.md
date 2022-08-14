@@ -8,18 +8,38 @@ an authenticated or anonymous way.
 
 # Features
 ## Markdown rendering
+Users can share their ideas in posts using [Markdown](https://commonmark.org/).
+This provides great flexibility for users creating their posts and a powerful
+opporunity for the application's code to parse this markdown and make sense of it
+to give it meaningful representations.
 
-## Posts cover URL
+## Post covers
+By parsing the contents of a post, Poster can detect images and by default sets
+the first image of a post to be its cover when listing it.
 
 ## Clean URL slugs
+Posts are given an unique slug based on their titles when created. This slug
+will uniquely identify a post in the system and cannot be changed.
+> Example: A post titled "25 Reasons to Learn Elixir" might have an URL similar
+> to `https://poster.example/25-reasons-to-learn-elixir-aryi4`
 
 ## Realtime capabilities
+Poster provides great realtime features for users, such as having new posts and
+comments being automatically shown to all users that are eligible to see them.
 
-## Realtime capabilities
+> Example: If someone is browsing posts at Poster, and you publish a new
+> post, this person will see your post pop up in her screen.
 
 ## Observability
 
-## Made with
+By using [PromEx](https://github.com/akoutmos/prom_ex), the systems enable
+prometheus support in the `/metrics` endpoints and integrates with Grafana to
+provide observability to the system administrators:
+
+![grafana beam vm dashboard](./.github/img/grafana_beam_dashboard.png)
+![grafana phoenix endpoint dashboard](./.github/img/grafana_phoenix_dashboard.png)
+
+# Made with
 ## Elixir + Phoenix
 The [Phoenix Framework](https://www.phoenixframework.org/) allows one to easily
 mix server-side rendered layouts and realtime interactive pages with an enormous

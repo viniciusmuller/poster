@@ -150,6 +150,48 @@ defmodule Poster.PostsTest do
     end
   end
 
+  # describe "posts - sorting" do
+  #   import Poster.PostsFixtures
+
+  #   alias Poster.Posts.Post
+
+  #   defp create_thirty_posts(_) do
+  #     posts = for _ <- 1..30, do: post_fixture()
+  #     %{posts: posts}
+  #   end
+
+  #   setup [:create_thirty_posts]
+
+  #   test "sort_posts/2 accepts :new sorter" do
+  #     asc_results = Posts.sort_posts(Post, {:new, :asc}) |> Repo.all()
+  #     assert is_sorted?(asc_results, & &1.inserted_at)
+
+  #     desc_results = Posts.sort_posts(Post, {:new, :desc}) |> Repo.all()
+  #     refute is_sorted?(desc_results, & &1.inserted_at)
+  #   end
+
+  #   test "sort_posts/2 accepts :recently_updated sorter" do
+  #     query = Posts.list_posts()
+
+  #     query_results =
+  #       Posts.sort_posts(query, {:recently_updated, :asc})
+  #       |> Repo.all()
+
+  #     assert is_sorted?(query_results, & &1.updated_at)
+
+  #     query_results =
+  #       Posts.sort_posts(query, {:recently_updated, :desc})
+  #       |> Repo.all()
+
+  #     refute is_sorted?(query_results, & &1.updated_at)
+  #   end
+      # defp is_sorted?(enum, by) do
+      #   enum |> Enum.sort_by(by) |> only_ids() == only_ids(enum)
+      # end
+
+      # defp only_ids(enum), do: Enum.map(enum, & &1.id)
+  # end
+
   describe "comments" do
     alias Poster.Posts.Comment
     alias Poster.Blog.Author

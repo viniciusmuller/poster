@@ -17,7 +17,7 @@ defmodule Poster.PostsFixtures do
         title: "some title",
         tags_raw: "music, games"
       })
-      |> Poster.Posts.create_post([:tags])
+      |> Poster.Posts.create_post()
 
     post
   end

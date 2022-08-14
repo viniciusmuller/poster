@@ -1,4 +1,6 @@
 defmodule Poster.Tags.Tag do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
 

@@ -1,4 +1,6 @@
 defmodule PosterWeb.AuthorLive.Show do
+  @moduledoc false
+
   use PosterWeb, :live_view
 
   alias Poster.Blog

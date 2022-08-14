@@ -35,14 +35,6 @@ defmodule PosterWeb.PostControllerTest do
       assert html_response(conn, 200) =~ "Recent Posts"
     end
 
-    test "paginates posts", %{conn: conn} do
-      for _ <- 1..20, do: post_fixture()
-
-      conn = get(conn, Routes.post_index_path(conn, :index))
-      assert html_response(conn, 200) =~ "Total results"
-      assert html_response(conn, 200) =~ ~s(id="pagination-navigation")
-    end
-
     test "does not show pagination when too few posts", %{conn: conn} do
       conn = get(conn, Routes.post_index_path(conn, :index))
       assert html_response(conn, 200) =~ "Total results"

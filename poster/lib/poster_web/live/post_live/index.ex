@@ -1,4 +1,6 @@
 defmodule PosterWeb.PostLive.Index do
+  @moduledoc false
+
   use PosterWeb, :live_view
 
   @topic "posts"
@@ -48,22 +50,42 @@ defmodule PosterWeb.PostLive.Index do
   end
 
   defp list_posts(params) do
-    search_term =
-      with query <- get_in(params, ["query"]),
-           true <- query != "" do
-        query
-      else
-        _ -> nil
-      end
-
     page =
-      search_term
+      params
+      |> extract_search_term()
       |> Posts.list_posts()
-      |> Posts.sort_posts(params)
+      |> Posts.sort_posts(parse_sorting(params))
       |> Poster.Repo.paginate(params)
 
     posts = Poster.Repo.preload(page.entries, [:author, :tags, :comments])
     {posts, page}
+  end
+
+  defp extract_search_term(params) do
+    with query <- get_in(params, ["query"]),
+         true <- query != "" do
+      query
+    else
+      _ -> nil
+    end
+  end
+
+  defp parse_sorting(params) do
+    sorter =
+      case Map.get(params, "sorter") do
+        "Recently updated" -> :recently_updated
+        "New" -> :new
+        _ -> :new
+      end
+
+    mode =
+      case Map.get(params, "mode") do
+        "Ascending" -> :asc
+        "Descending" -> :desc
+        _ -> :desc
+      end
+
+    {sorter, mode}
   end
 
   # TODO: Centralize these in a module

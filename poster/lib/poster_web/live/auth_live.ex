@@ -1,4 +1,9 @@
 defmodule PosterWeb.LiveAuth do
+  @moduledoc """
+  Helper for handling user authenticated and authorization
+  in LiveView routes.
+  """
+
   import Phoenix.LiveView
 
   alias Poster.Accounts

@@ -1,4 +1,6 @@
 defmodule PosterWeb.PostLive.Show do
+  @moduledoc false
+
   use PosterWeb, :live_view
   on_mount {PosterWeb.LiveAuth, :fetch_user}
 

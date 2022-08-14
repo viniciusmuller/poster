@@ -1,4 +1,8 @@
 defmodule Poster.PostTag do
+  @moduledoc """
+  Describes the association between posts and tags
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

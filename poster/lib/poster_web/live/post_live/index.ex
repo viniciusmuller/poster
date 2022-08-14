@@ -26,7 +26,7 @@ defmodule PosterWeb.PostLive.Index do
   end
 
   @impl true
-  def handle_event("search", %{"search" => query}, socket) do
+  def handle_event("search", %{"query" => query}, socket) do
     {:noreply, push_patch(socket, to: Routes.post_index_path(socket, :index, query))}
   end
 
@@ -42,6 +42,9 @@ defmodule PosterWeb.PostLive.Index do
     |> assign(:page_title, "Browsing Posts")
     |> assign(:posts, posts)
     |> assign(:page, page)
+    |> assign(:query, Map.get(params, "query", nil))
+    |> assign(:sorter, Map.get(params, "sorter", "New"))
+    |> assign(:mode, Map.get(params, "mode", "Descending"))
   end
 
   defp list_posts(params) do

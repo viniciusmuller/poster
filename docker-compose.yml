@@ -12,7 +12,7 @@ services:
     environment:
       - PGUSER=postgres
       - PGPASSWORD=postgres
-      - PGDATABASE=poster_dev
+      - PGDATABASE=poster
       - PGHOST=db
       - PGPORT=5432
       - DATABASE_URL=ecto://postgres:postgres@db/poster

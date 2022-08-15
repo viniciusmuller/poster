@@ -34,7 +34,7 @@ defmodule Poster.Posts.Post do
     post
     |> cast(attrs, [:title, :body, :tags_raw])
     |> validate_required([:title, :body, :tags_raw])
-    |> validate_length(:body, min: 10, max: 2000)
+    |> validate_length(:body, min: 10, max: 5000)
     |> validate_length(:title, min: 1, max: 80)
     |> create_slug()
     |> find_cover()
@@ -46,7 +46,7 @@ defmodule Poster.Posts.Post do
     post
     |> cast(attrs, [:title, :body, :tags_raw])
     |> validate_required([:title, :body, :tags_raw])
-    |> validate_length(:body, min: 10, max: 2000)
+    |> validate_length(:body, min: 10, max: 5000)
     |> validate_length(:title, min: 1, max: 80)
     |> find_cover()
     |> product_tags()

@@ -19,14 +19,26 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap w-full">
+  <div x-data="{
+      markdownInput: document.getElementById('post-body').value,
+      renderMarkdown() {
+       // IMPORTANT: Sanitizing prevents XSS attacks
+        return DOMPurify.sanitize(marked.parse(this.markdownInput));
+      }
+     }"
+      class="flex flex-wrap w-full">
     <div class="w-full md:w-1/2 mr-6">
         <%= label f, :body, class: "block" %>
-        <%= textarea f, :body, id: "markdown-input", class: "w-full h-64 text-sm text-gray-900 border-gray-300 rounded-lg border focus:ring-blue-500 focus:border-blue-500", placeholder: "Your post", onkeyup: "renderMarkdown()" %>
+        <%= textarea f, :body,
+          class: "w-full h-64 text-sm text-gray-900 border-gray-300 rounded-lg border focus:ring-blue-500 focus:border-blue-500",
+          placeholder: "Your post",
+          id: "post-body",
+          x_init: "this.markdownInput = $el.value",
+          x_model: "markdownInput"  %>
         <%= error_tag f, :body %>
     </div>
 
-    <div id="rendered-markdown" class="prose border p-3 border-gray-100 w-full mh-64 mt-6"></div>
+    <div x-html="renderMarkdown(this.markdownInput)" class="prose border p-3 border-gray-100 w-full mh-64 mt-6"> </div>
   </div>
 
   <div class="flex items-center">
@@ -37,16 +49,3 @@
     </span>
   </div>
 </.form>
-
-<script>
-  let markdownInput = document.getElementById("markdown-input");
-  let markdownTarget = document.getElementById("rendered-markdown");
-
-  function renderMarkdown() {
-    const sanitized = DOMPurify.sanitize(marked.parse(markdownInput.value)); // IMPORTANT: Prevent XSS attacks
-    markdownTarget.innerHTML = sanitized;
-  }
-
-  renderMarkdown(markdownInput.value);
-</script>
-

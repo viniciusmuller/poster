@@ -1,6 +1,33 @@
 # Poster
 ![ci status](https://github.com/arcticlimer/poster/actions/workflows/ci.yml/badge.svg)
 
+![poster home page](./.github/img/poster_home.png)
+
+# Table of Contents
+- [Features](#features)
+  * [Markdown rendering](#markdown-rendering)
+  * [Post covers](#post-covers)
+  * [Clean URL slugs](#clean-url-slugs)
+  * [Realtime capabilities](#realtime-capabilities)
+  * [Observability](#observability)
+- [Made with](#made-with)
+  * [Elixir + Phoenix](#elixir---phoenix)
+  * [Tests](#tests)
+  * [GitHub](#github)
+  * [Tailwind CSS](#tailwind-css)
+  * [Alpine JS](#alpine-js)
+  * [Docker](#docker)
+- [Development Setup](#development-setup)
+  * [Installing development environment](#installing-development-environment)
+    + [With asdf](#with--asdf--https---asdf-vmcom-)
+    + [With Nix](#with--nix--https---nixosorg-downloadhtml-)
+  * [Start dependencies with docker-compose](#start-dependencies-with-docker-compose)
+  * [Enter the application directory](#enter-the-application-directory)
+  * [Setup the project](#setup-the-project)
+  * [Run the project](#run-the-project)
+- [Running with Docker](#running-with-docker)
+- [Running with docker-compose](#running-with-docker-compose)
+
 Poster is a realtime web application made with the [PETAL
 stack](https://thinkingelixir.com/petal-stack-in-elixir/) that allows users to
 share knowledge and chat through posts and comments, which can be published in
@@ -21,7 +48,7 @@ the first image of a post to be its cover when listing it.
 Posts are given an unique slug based on their titles when created. This slug
 will uniquely identify a post in the system and cannot be changed.
 > Example: A post titled "25 Reasons to Learn Elixir" might have an URL similar
-> to `https://poster.example/25-reasons-to-learn-elixir-aryi4`
+> to `https://poster.example/p/25-reasons-to-learn-elixir-aryi4`
 
 ## Realtime capabilities
 Poster provides great realtime features for users, such as having new posts and
@@ -46,6 +73,16 @@ mix server-side rendered layouts and realtime interactive pages with an enormous
 ease. The realtime features of this project are provided by [Phoenix
 PubSub](https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html) and [Phoenix
 LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html).
+
+## Tests
+Since Phoenix makes it extremely easy to test complex interaction with pages,
+the app contains a big test suite that ensures the main features of the
+application are tested and the code coverage remains at around 90%.
+
+## GitHub
+The project uses GitHub Actions as its continuous integration mechanism to
+ensure that code is properly formatted, tests are passing and type-checking
+points no errors.
 
 ## Tailwind CSS
 [Tailwind CSS](https://tailwindcss.com/) considerably boosts developer

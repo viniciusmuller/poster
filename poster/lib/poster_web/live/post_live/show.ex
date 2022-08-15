@@ -8,7 +8,7 @@ defmodule PosterWeb.PostLive.Show do
 
   alias Poster.Posts
   alias Poster.Markdown
-  alias Poster.Posts.{Comment, Post}
+  alias Poster.Posts.Comment
 
   @impl true
   def mount(_params, _session, socket) do

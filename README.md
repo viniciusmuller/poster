@@ -3,6 +3,11 @@
 
 ![poster home page](./.github/img/poster_home.png)
 
+Poster is a realtime web application made with the [PETAL
+stack](https://thinkingelixir.com/petal-stack-in-elixir/) that allows users to
+share knowledge and chat through posts and comments, which can be published in
+an authenticated or anonymous way.
+
 # Table of Contents
 - [Features](#features)
   * [Markdown rendering](#markdown-rendering)
@@ -27,11 +32,6 @@
   * [Run the project](#run-the-project)
 - [Running with Docker](#running-with-docker)
 - [Running with docker-compose](#running-with-docker-compose)
-
-Poster is a realtime web application made with the [PETAL
-stack](https://thinkingelixir.com/petal-stack-in-elixir/) that allows users to
-share knowledge and chat through posts and comments, which can be published in
-an authenticated or anonymous way.
 
 # Features
 ## Markdown rendering
